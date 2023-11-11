@@ -57,6 +57,7 @@ również je osobno.}}
         \includegraphics[width=0.65\textwidth]{mockups/adding_recipe}
     \end{center}
     \caption{Powyższa strona umożliwia użytkownikowi dodanie nowego przepisu, wraz ze zdjęciem gotowej potrawy, a także precyzyjnymi informacjami na jej temat}
+    \label{fig:add_recipe}
 \end{figure}
 
 \newpage
@@ -101,6 +102,7 @@ również je osobno.}}
         \includegraphics[width=0.8\textwidth]{mockups/login_page}
     \end{center}
     \caption{Widok podstrony odpowiedzialnej za logowanie użytkownika}
+    \label{fig:login_page}
 \end{figure}
 
 \subsection{Strona rejestrowania}
@@ -184,5 +186,99 @@ w języku polskim nie są poprawne, a jedyna receptura spełniająca kryteria na
 na język polski wersji, a następnie podesłać go znajomym (chce po prostu podesłać do niego link). Osoba z naszego scenariusza przygotowała już kiedyś to danie i posiada jego zdjęcie.
 Wie też, że jest to danie główne, przepis pozwala na przygotowanie 4 porcji, zawiera w sobie mięso, a przygotowanie zajmuje mniej więcej 2 godziny. Aktor naszego scenariusza spotkał
 już kiedyś witrynę \textit{WikaGotuje} i ma tam założone konto, ale nie jest zalogowany.
+
+\subsection{Storyboard}
+\begin{enumerate}
+    \item Zakładamy, że osoba z naszego scenariusza zaczyna na ekranie głównym naszej witryny internetowej (patrz Rysunek: \ref{fig:main_page})
+    \item W kolejnym kroku aktor z naszego scenariusza klika w przycisk \textit{Zaloguj się} w nagłówku
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.8\textwidth]{images/add_recipe_step1}
+            \end{center}
+        \end{figure}
+    \item Użytkownikowi ukazuje się ekran logowania (patrz Rysunek: \ref{fig:login_page})
+    \item Użytkownik wprowadza dane do swojego konta i klika przycisk \textit{Zaloguj się}
+    \item Po zalogowaniu użytkownik wybiera opcję \textit{Dodaj przepis} w nagłówku strony
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.8\textwidth]{images/add_recipe_step2}
+            \end{center}
+        \end{figure}
+    \item Użytkownikowi ukazuje się strona dodawania przepisu (patrz Rysunek: \ref{fig:add_recipe})
+    \item Użytkownik wpisuje \textit{Chinkali} w pole \textit{Nazwa przepisu}
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.3\textwidth]{images/add_recipe_step3}
+            \end{center}
+        \end{figure}
+    \item Użytkownik wybiera w polu \textit{Rodzaj potrawy} opcję \textit{Danie główne}
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.3\textwidth]{images/add_recipe_step4}
+            \end{center}
+        \end{figure}
+    \newpage
+
+    \item Użytkownik klika w ikonę zdjęcia w polu \textit{Wybierz zdjęcie}
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.3\textwidth]{images/add_recipe_step5}
+            \end{center}
+        \end{figure}
+    \item Użytkownikowi ukazuje się systemowy file picker
+    \item Użytkownik wybiera zdjęcie gotowego dania
+    \item W sekcji \textit {Potrzebne składniki} dla składniku użytkownik wprowadza jego ilość i nazwę w odpowiednie pole tekstowe i klika symbol +
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.3\textwidth]{images/add_recipe_step6}
+            \end{center}
+        \end{figure}
+    \item W sekcji \textit{Lista kroków} dla każdego kroku użytkownik wprowadza jego opis w odpowiednie pole tekstowe i klika symbol +
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.3\textwidth]{images/add_recipe_step7}
+            \end{center}
+        \end{figure}
+    \item Użytkownik w polu \textit{Poziom zaawansowania} wybiera opcję \textit{Średniozaawansowany}
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.3\textwidth]{images/add_recipe_step8}
+            \end{center}
+        \end{figure}
+    \newpage
+
+    \item Użytkownik w polu \textit{Dostępność składników} wybiera opcję \textit{Łatwa dostępność składników}
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.3\textwidth]{images/add_recipe_step9}
+            \end{center}
+        \end{figure}
+    \item Użytkownik w polu \textit{Czas przygotowania} wpisuje \textit{120}
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.3\textwidth]{images/add_recipe_step10}
+            \end{center}
+        \end{figure}
+    \item Użytkownik w polu \textit{Region pochodzenia} wybiera opcję \textit{Europa}
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.3\textwidth]{images/add_recipe_step11}
+            \end{center}
+        \end{figure}
+    \item Użytkownik klika przycisk dodaj przepis na dole strony
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.8\textwidth]{images/add_recipe_step12}
+            \end{center}
+        \end{figure}
+    \newpage
+
+    \item Po wykonaniu tych kroków użytkownik zostaje przekierowany na stronę z dodanym przepisem. Może teraz skopiować link i wysłać go swoim znajomym
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.4\textwidth]{images/add_recipe_step13}
+            \end{center}
+        \end{figure}
+\end{enumerate}
 
 \end{document}
