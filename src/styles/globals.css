@@ -1,8 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merienda:wght@400;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
   font-family: 'Lato', sans-serif;
+}
+
+.page_padding {
+  @apply px-[10px] sm:px-[60px] lg:px-[120px];
 }
