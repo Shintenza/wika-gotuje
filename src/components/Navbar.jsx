@@ -2,57 +2,53 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { MenuIcon, XIcon } from '@heroicons/react/outline';
+
 import wikagotuje_logo from '../assets/logo.png';
 import user_picture from '../assets/user.png';
 
 const Navbar = () => {
-  const [isLogged, setIsLogged] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [nav, setNav] = useState(false)
+  const handleClick = () => setNav(!nav)
 
-  const mobileHandler = () => {
-    setIsMobile(!isMobile);
-  }
-
-  const loginHandler = () => {
-    setIsLogged(true);
-  };
+  const handleClose = () => setNav(!nav)
 
   return (
-    <>
-      {isMobile ? (
-        <header className='flex justify-between border-b-2 border-black'>
+    <div className='w-screen h-[80px] z-10 border-b-2 border-black'>
+      
+        <div className='flex items-center justify-between px-2 pt-2 sm:mx-24'>
           <div>
-            <Image src={wikagotuje_logo} alt='Wika Gotuje' />
-          </div>
-          <div className='p-2' onClick={mobileHandler}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-          </div>
-        </header>
-      ) : (
-        <header className='border-b-2 border-black flex justify-between items-center py-4 px-6'>
-          <div>
-            <Image src={wikagotuje_logo} alt='Wika Gotuje' className='h-70% w-auto' />
+            <Image src={wikagotuje_logo} alt='Wika Gotuje' className='h-70% w-auto sm:ml-4' />
           </div>
           <div>
-            <ul className='flex space-x-4'>
+            <ul className='hidden md:flex sm:space-x-8'>
               <li><button className='px-2 py-1 hover:underline'>Strona główna</button></li>
               <li><button className='px-2 py-1 hover:underline'>Znajdz przepis</button></li>
               <li><button className='px-2 py-1 hover:underline'>Dodaj przepis</button></li>
               <li><button className='px-2 py-1 hover:underline'>Polubione</button></li>
             </ul>
           </div>
-          <div>
-            {isLogged ? (
-              <img src={user_picture} alt='user picture' className='h-10 rounded-full' />
-            ) : (
-              <button onClick={loginHandler} className='border border-black px-4 p-2 rounded-md'>Zaloguj się</button>
-            )}
+
+          <div className='hidden md:flex pr-4'>
+            <button className='border border-black px-4 p-2 rounded-md hover:bg-black hover:text-white'>Zaloguj się</button>
           </div>
-        </header>
-      )}
-    </>
+        </div>
+        
+        <div className='md:hidden mr-4' onClick={handleClick}>
+          {!nav ? <MenuIcon className='w-5' /> : <XIcon className='w-5' />}
+        </div>
+
+      <ul className={!nav ? 'hidden' : 'absolute bg-zinc-200 w-full px-8'}>
+        <li className='border-b-2 border-zinc-300 w-full'><button onClick={handleClose}>Strona główna</button></li>
+        <li className='border-b-2 border-zinc-300 w-full'><button onClick={handleClose}>Znajdz przepis</button></li>
+        <li className='border-b-2 border-zinc-300 w-full'><button onClick={handleClose}>Dodaj przepis</button></li>
+        <li className='border-b-2 border-zinc-300 w-full'><button onClick={handleClose}>Polubione</button></li>
+
+        <div className='flex flex-col my-4'>
+          <button className='border border-black px-4 p-2 rounded-md hover:bg-black hover:text-white'>Zaloguj się</button>
+        </div>
+      </ul>
+    </div>
   );
 };
 
