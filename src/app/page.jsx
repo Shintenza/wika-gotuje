@@ -15,7 +15,8 @@ export default function Home() {
       commentCount: 69,
       date: '02.11.2023',
       time: 90,
-      isLiked: false
+      isLiked: false,
+      id: 2137 
     };
 
     for (let i = 0; i < 3; i++) {
@@ -25,7 +26,6 @@ export default function Home() {
   };
   return (
     <main>
-      <h1>Main page</h1>
       <RecipeGrid sectionTitle="Popularne" recipes={returnRecipes()} />
     </main>
   );
