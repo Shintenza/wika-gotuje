@@ -16,7 +16,6 @@ export default function Page({ params }) {
     authorName: 'Stefania Kurwigrzmot',
     difficulty: 'Łatwy',
     reviewCount: 2137,
-    commentCount: 69,
     date: '02.11.2023',
     time: 90,
     isLiked: false,
@@ -51,7 +50,43 @@ export default function Page({ params }) {
         isDone: false,
       },
     ],
-    comments: [],
+    comments: [
+      {
+        authorImg:
+          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        authorName: 'Karosław Jaczyński',
+        date: '11.11.2023',
+        text: 'Mniam, ale wchodzi',
+      },
+      {
+        authorImg:
+          'https://images.unsplash.com/photo-1615813967515-e1838c1c5116?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        authorName: 'Norbert Krzywonogi',
+        date: '12.11.2023',
+        text: 'Autorka nie zna się na gotowaniu. Sos leje się jak sraka. Przez ciebie zmarnowane pół kilo mięsa pajacu.',
+      },
+      {
+        authorImg:
+          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        authorName: 'Stefania Kurwigrzmot',
+        date: '12.11.2023',
+        text: 'Sam się nie znasz na gotowaniu, sos jest w pyte!',
+      },
+      {
+        authorImg:
+          'https://images.unsplash.com/photo-1554151228-14d9def656e4?q=80&w=3086&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        authorName: 'Patrycja Parówka',
+        date: '15.11.2023',
+        text: 'Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.',
+      },
+      {
+        authorImg:
+          'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=3161&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        authorName: 'Barbara Miller',
+        date: '17.11.2023',
+        text: 'Zdefekowałam po tym.',
+      },
+    ],
   };
 
   return (
@@ -77,7 +112,7 @@ export default function Page({ params }) {
           </p>
           <p className='inline-block'>
             <BiCommentDetail className='inline-block text-lg' />{' '}
-            {recipe.commentCount}
+            {recipe.comments.length}
           </p>
         </div>
       </div>
@@ -144,7 +179,6 @@ export default function Page({ params }) {
         Podziel się wrażeniami
       </div>
 
-      <h1 className='py-[35px] font-secondary text-4xl'>Komentarze</h1>
       <CommentList comments={recipe.comments} />
     </div>
   );
