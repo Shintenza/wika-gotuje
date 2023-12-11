@@ -4,6 +4,7 @@ import { PiPrinterLight } from 'react-icons/pi';
 import { BiCommentDetail } from 'react-icons/bi';
 import Task from '@components/Task';
 import CommentList from '@components/CommentList';
+import { MdStar, MdStarHalf, MdStarBorder } from 'react-icons/md';
 
 export default function Page({ params }) {
   const recipe = {
@@ -89,6 +90,39 @@ export default function Page({ params }) {
     ],
   };
 
+  const returnStars = () => {
+    const stars = [];
+    let starIndex = 0;
+
+    let decimalPart = recipe.reviewAvg - Math.floor(recipe.reviewAvg);
+
+    if (decimalPart <= 0.25) decimalPart = 0;
+    else if (decimalPart >= 0.75) decimalPart = 1;
+    else decimalPart = 0.5;
+
+    for (let i = 0; i < Math.floor(recipe.reviewAvg + decimalPart); i++) {
+      stars.push(<MdStar color='#FF8051' key={starIndex} />);
+      starIndex++;
+    }
+
+    if (decimalPart === 0.5) {
+      stars.push(<MdStarHalf color='#FF8051' key={starIndex} />);
+      starIndex++;
+    }
+
+    const starsLeft =
+      5 -
+      (Math.floor(recipe.reviewAvg + decimalPart) +
+        (decimalPart === 0.5 ? 1 : 0));
+
+    for (let i = 0; i < starsLeft; i++) {
+      stars.push(<MdStarBorder color='#FF8051' key={starIndex} />);
+      starIndex++;
+    }
+
+    return stars;
+  };
+
   return (
     <div className='page_padding'>
       <h1 className='py-[35px] font-secondary text-4xl'>{recipe.title}</h1>
@@ -99,13 +133,13 @@ export default function Page({ params }) {
             src={recipe.authorImg}
             fill
             className='rounded-full object-cover'
-            alt='`{recipe.authorName}`'
+            alt={recipe.authorName}
           />
         </div>
         <p className='text-lg'>{recipe.authorName}</p>
-        <div className='rounded-lg bg-w_orange px-5 py-1 text-white hover:opacity-80'>
+        <button className='rounded-lg bg-w_orange px-5 py-1 text-white hover:opacity-80'>
           Obserwuj
-        </div>
+        </button>
         <div>
           <p className='inline-block pr-3'>
             <FaRegCalendarAlt className='inline-block text-lg' /> {recipe.date}
@@ -122,7 +156,7 @@ export default function Page({ params }) {
           src={recipe.recipeImg}
           fill
           className='rounded-xl object-cover'
-          alt='`{recipe.title}`'
+          alt={recipe.title}
         />
       </div>
 
@@ -148,12 +182,12 @@ export default function Page({ params }) {
           </div>
         </div>
 
-        <div>
+        <button>
           <p className='inline-block'>
             Wydrukuj przepis
             <PiPrinterLight className='ml-5 inline-block text-5xl' />
           </p>
-        </div>
+        </button>
       </div>
 
       <div className='grid grid-cols-10 pb-4'>
@@ -175,11 +209,44 @@ export default function Page({ params }) {
         Przygotowałeś już ten przepis?
       </h1>
 
-      <div className='max-w-fit rounded-xl bg-black px-28 py-5 text-lg text-white hover:opacity-80'>
+      <button className='max-w-fit rounded-xl bg-black px-28 py-5 text-lg text-white hover:opacity-80'>
         Podziel się wrażeniami
-      </div>
+      </button>
 
       <CommentList comments={recipe.comments} />
+
+      <h2 className='pb-4 pt-12 font-secondary text-3xl'>Oceń przepis</h2>
+      <div className='flex items-center gap-10'>
+        <div className='text-xl'>
+          Średnia {recipe.reviewAvg}/5 ({recipe.reviewCount} głosów)
+        </div>
+        <div className='flex gap-3 text-6xl'>{returnStars()}</div>
+      </div>
+
+      <div className='flex items-center justify-between pb-8 pt-12'>
+        <label for='comment' className='font-secondary text-3xl'>
+          Napisz komentarz
+        </label>
+        <div>
+          <button className='text-w_orange underline hover:opacity-80'>
+            Zaloguj się
+          </button>{' '}
+          aby dodać komentarz
+        </div>
+      </div>
+      <div className='relative mb-24 h-80 w-full rounded-xl bg-gray-100'>
+        <div className='p-8'>
+          <textarea
+            id='comment'
+            rows='8'
+            className='w-full resize-none bg-gray-100 placeholder:text-gray-600'
+            placeholder='Napisz co sądzisz o tym przepisie.'
+          ></textarea>
+        </div>
+        <button className='absolute bottom-6 right-8 rounded-xl bg-w_orange p-3 text-white hover:opacity-80'>
+          Opublikuj komentarz
+        </button>
+      </div>
     </div>
   );
 }
