@@ -1,11 +1,10 @@
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 import wikagotuje_logo from '../../public/logo.svg';
-import user_picture from '../assets/user.png';
 import Image from 'next/image';
 
 const Footer = () => {
   return (
-    <footer className='page_padding flex min-h-[50vh] flex-col items-center justify-between gap-4 bg-gray-100 font-light text-gray-700 sm:flex-row py-6 mt-12'>
+    <footer className='page_padding mt-12 flex min-h-[50vh] flex-col items-center justify-between gap-4 bg-gray-100 py-6 font-light text-gray-700 sm:flex-row'>
       <div className='w-8/12 sm:w-3/12'>
         <div className='relative w-full'>
           <Image
@@ -14,7 +13,7 @@ const Footer = () => {
             alt='logo of the page'
           />
         </div>
-        <p>
+        <p className='pt-3 text-justify'>
           Smakuj życie poprzez kuchnię. Odkrywaj nowe smaki, twórz kulinarne
           arcydzieła i dziel się radością gotowania z innymi. W naszej
           przestrzeni każdy posiłek to wyjątkowa podróż przez smaki i aromaty.
