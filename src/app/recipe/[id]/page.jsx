@@ -118,7 +118,7 @@ export default function Page({ params }) {
     <div className='page_padding'>
       <h1 className='py-[35px] font-secondary text-4xl'>{recipe.title}</h1>
 
-      <div className='flex items-center gap-6 text-sm'>
+      <div className='flex flex-wrap items-center gap-6 text-sm'>
         <div className='relative h-[44px] w-[44px]'>
           <Image
             src={recipe.authorImg}
@@ -151,23 +151,23 @@ export default function Page({ params }) {
         />
       </div>
 
-      <div className='flex justify-between py-16'>
-        <div className='flex divide-x divide-black font-light uppercase'>
-          <div className='pr-8 text-center'>
+      <div className='flex flex-col justify-between gap-8 py-16 md:flex-row'>
+        <div className='flex flex-col divide-y divide-black font-light uppercase sm:flex-row sm:divide-x sm:divide-y-0'>
+          <div className='pb-4 text-center sm:py-0 sm:pr-8'>
             <p className='text-gray-500'>Czas</p>
             <p>{recipe.time} min</p>
           </div>
-          <div className='px-8 text-center'>
+          <div className='py-4 text-center sm:px-8 sm:py-0'>
             <p className='text-gray-500'>Porcje</p>
             <p>
               {recipe.portions} {recipe.portions > 1 ? 'osoby' : 'osoba'}
             </p>
           </div>
-          <div className='px-8 text-center'>
+          <div className='py-4 text-center sm:px-8 sm:py-0'>
             <p className='text-gray-500'>Trudność</p>
             <p>{recipe.difficulty}</p>
           </div>
-          <div className='pl-8 text-center'>
+          <div className='pt-4 text-center sm:py-0 sm:pl-8'>
             <p className='text-gray-500'>Dostępność składników</p>
             <p>{recipe.availability}</p>
           </div>
@@ -181,14 +181,14 @@ export default function Page({ params }) {
         </button>
       </div>
 
-      <div className='grid grid-cols-10 pb-4'>
-        <div className='col-span-4 pr-5'>
+      <div className='flex flex-col gap-5 pb-4 md:flex-row'>
+        <div className='flex-shrink-0 md:w-1/3'>
           <h2 className='pb-4 text-2xl font-bold'>Składniki</h2>
           {recipe.ingredients.map((task, key) => (
             <Task task={task} recipeId={params.id} key={key} />
           ))}
         </div>
-        <div className='col-span-6 pl-5'>
+        <div className=''>
           <h2 className='pb-4 text-2xl font-bold'>Kroki przygotowania</h2>
           {recipe.tasks.map((task, key) => (
             <Task task={task} recipeId={params.id} key={key} />
@@ -207,8 +207,8 @@ export default function Page({ params }) {
       <CommentList comments={recipe.comments} />
 
       <h2 className='pb-4 pt-12 font-secondary text-3xl'>Oceń przepis</h2>
-      <div className='flex items-center gap-10'>
-        <div className='text-xl'>
+      <div className='flex flex-wrap items-center'>
+        <div className='pr-10 text-xl'>
           Średnia {recipe.reviewAvg}/5 ({recipe.reviewCount} głosów)
         </div>
         <div className='flex gap-3 text-6xl'>{returnStars()}</div>
