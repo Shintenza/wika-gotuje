@@ -5,7 +5,6 @@ import Comment from './Comment';
 
 const CommentList = ({ comments }) => {
   const [loadedCount, setLoadedCount] = useState(Math.min(3, comments.length));
-  console.log(comments.length, loadedCount);
 
   const handleLoad = () => {
     setLoadedCount(loadedCount + Math.min(comments.length - loadedCount, 10));

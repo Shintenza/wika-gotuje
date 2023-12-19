@@ -23,33 +23,24 @@ export default function Page({ params }) {
     portions: 4,
     availability: 'Łatwa',
     ingredients: [
-      { text: '150g boczku', isDone: true },
-      { text: '1 cebula', isDone: true },
-      { text: '2 łodygi selera naciowego', isDone: true },
-      { text: '1 marchewka', isDone: true },
-      { text: '2 łyżki oliwy', isDone: false },
-      { text: '500g mielonego mięsa', isDone: false },
-      { text: '1 szklanka czerwonego wina', isDone: false },
-      { text: '1 szklanka gorącego bulionu', isDone: false },
-      { text: '4 łyżki koncentratu pomidorowego', isDone: false },
-      { text: '1 puszka obranych pomidorów', isDone: false },
-      { text: '1/2 szklanki mleka', isDone: false },
-      { text: 'makaron spaghetti (75g/porcję)', isDone: false },
-      { text: 'tarty parmezan', isDone: false },
+      '150g boczku',
+      '1 cebula',
+      '2 łodygi selera naciowego',
+      '1 marchewka',
+      '2 łyżki oliwy',
+      '500g mielonego mięsa',
+      '1 szklanka czerwonego wina',
+      '1 szklanka gorącego bulionu',
+      '4 łyżki koncentratu pomidorowego',
+      '1 puszka obranych pomidorów',
+      '1/2 szklanki mleka',
+      'makaron spaghetti (75g/porcję)',
+      'tarty parmezan',
     ],
     tasks: [
-      {
-        text: 'Boczek pokroić w drobną kostkę i włożyć na dużą patelnię, wytopić na małym ogniu aż się zrumieni. Przesunąć na bok, w wytopiony tłuszcz włożyć drobno posiekaną cebulę i zeszklić. Dodać drobno posiekany seler naciowy i startą marchewkę. Obsmażyć, następnie wszystko przełożyć do garnka.',
-        isDone: true,
-      },
-      {
-        text: 'Na patelnię wlać oliwę i obsmażyć mięso. Obsmażone mięso przełożyć do garnka z boczkiem i warzywami. Wlać wino i gotować mieszając ok. 5 minut. Dodać gorący bulion i koncentrat pomidorowy, wymieszać. Dodać pomidory z puszki, doprawić solą i pieprzem. Drewnianą łyżką rozdrobnić pomidory i wymieszać.',
-        isDone: false,
-      },
-      {
-        text: 'Przykryć i gotować na małym ogniu przez minimum 2 godziny, od czasu do czasu mieszając. W połowie gotowania dodać mleko. Podawać z ugotowanym makaronem spaghetti posypując tartym parmezanem.',
-        isDone: false,
-      },
+      'Boczek pokroić w drobną kostkę i włożyć na dużą patelnię, wytopić na małym ogniu aż się zrumieni. Przesunąć na bok, w wytopiony tłuszcz włożyć drobno posiekaną cebulę i zeszklić. Dodać drobno posiekany seler naciowy i startą marchewkę. Obsmażyć, następnie wszystko przełożyć do garnka.',
+      'Na patelnię wlać oliwę i obsmażyć mięso. Obsmażone mięso przełożyć do garnka z boczkiem i warzywami. Wlać wino i gotować mieszając ok. 5 minut. Dodać gorący bulion i koncentrat pomidorowy, wymieszać. Dodać pomidory z puszki, doprawić solą i pieprzem. Drewnianą łyżką rozdrobnić pomidory i wymieszać.',
+      'Przykryć i gotować na małym ogniu przez minimum 2 godziny, od czasu do czasu mieszając. W połowie gotowania dodać mleko. Podawać z ugotowanym makaronem spaghetti posypując tartym parmezanem.',
     ],
     comments: [
       {
@@ -194,13 +185,13 @@ export default function Page({ params }) {
         <div className='col-span-4 pr-5'>
           <h2 className='pb-4 text-2xl font-bold'>Składniki</h2>
           {recipe.ingredients.map((task, key) => (
-            <Task task={task} key={key} />
+            <Task task={task} recipeId={params.id} key={key} />
           ))}
         </div>
         <div className='col-span-6 pl-5'>
           <h2 className='pb-4 text-2xl font-bold'>Kroki przygotowania</h2>
           {recipe.tasks.map((task, key) => (
-            <Task task={task} key={key} />
+            <Task task={task} recipeId={params.id} key={key} />
           ))}
         </div>
       </div>
@@ -224,7 +215,7 @@ export default function Page({ params }) {
       </div>
 
       <div className='flex items-center justify-between pb-8 pt-12'>
-        <label for='comment' className='font-secondary text-3xl'>
+        <label htmlFor='comment' className='font-secondary text-3xl'>
           Napisz komentarz
         </label>
         <div>
