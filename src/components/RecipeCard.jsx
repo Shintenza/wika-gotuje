@@ -56,19 +56,20 @@ const RecipeCard = ({ recipe }) => {
   };
 
   return (
-    <Link href={`recipe/${recipe.id}`}>
-      <div className='relative flex w-full flex-col rounded-lg bg-w_gray'>
-        <div
-          className='absolute right-0 top-0 z-10 mr-2 mt-2 h-[30px] w-[30px] rounded-full bg-white'
-          onClick={handleIsLiked}
-        >
-          {isLiked ? (
-            <FaHeart className='m-auto h-full' color='#FF8051' />
-          ) : (
-            <FaRegHeart className='m-auto h-full' color='#FF8501' />
-          )}
-        </div>
-        <div className='relative min-h-[227px] w-full '>
+    <div className='relative flex w-full flex-col rounded-lg bg-w_gray'>
+      <div
+        className='absolute right-0 top-0 z-10 mr-2 mt-2 h-[30px] w-[30px] rounded-full bg-white hover:cursor-pointer'
+        onClick={handleIsLiked}
+      >
+        {isLiked ? (
+          <FaHeart className='m-auto h-full' color='#FF8051' />
+        ) : (
+          <FaRegHeart className='m-auto h-full' color='#FF8501' />
+        )}
+      </div>
+
+      <Link href={`recipe/${recipe.id}`}>
+        <div className=' relative min-h-[227px] w-full '>
           <Image
             src={recipe.recipeImg}
             fill
@@ -115,8 +116,8 @@ const RecipeCard = ({ recipe }) => {
             </div>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
 
