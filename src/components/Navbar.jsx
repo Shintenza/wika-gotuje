@@ -4,17 +4,20 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
-import { IoCloseSharp } from "react-icons/io5";
+import { IoCloseSharp } from 'react-icons/io5';
 
 import styles from '@styles/Navbar.module.css';
 
 import wikagotuje_logo from '../../public/logo.svg';
 import { usePathname } from 'next/navigation';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 const Navbar = () => {
   const pathname = usePathname();
 
   const [nav, setNav] = useState(false);
+  const { data: session, status } = useSession();
+  console.log(session);
 
   const navigationElements = [
     <Link
@@ -46,17 +49,40 @@ const Navbar = () => {
       Polubione
     </Link>,
   ];
+  const getAuthBtn = (classesString) => {
+    if (status == 'unauthenticated') {
+      return (
+        <button className={classesString} onClick={() => signIn()}>
+          Zaloguj się
+        </button>
+      );
+    }
+    if (status == 'authenticated') {
+      return (
+        <Image
+          src={session.user.image}
+          alt='user avatar'
+          width={50}
+          height={50}
+          className='rounded-full shadow-md'
+          onClick={() => signOut()}
+        />
+      );
+    }
+  };
 
   return (
     <div className='page_padding mb-12 flex h-[20vh] items-center border-b-2 border-black'>
       <div className='flex h-full w-full items-center justify-between px-2 pt-2'>
         <div className='sm:6/12 relative h-4/5 w-9/12 lg:w-3/12'>
-          <Image
-            src={wikagotuje_logo}
-            alt='Wika Gotuje Logo'
-            fill
-            className='font-logo object-contain'
-          />
+          <Link href='/'>
+            <Image
+              src={wikagotuje_logo}
+              alt='Wika Gotuje Logo'
+              fill
+              className='font-logo object-contain'
+            />
+          </Link>
         </div>
         <div>
           <ul className='hidden gap-8 md:flex'>
@@ -65,23 +91,26 @@ const Navbar = () => {
         </div>
 
         <div className='hidden pr-4 md:flex'>
-          <button className='rounded-md border border-black p-2 px-4 hover:bg-black hover:text-white'>
-            Zaloguj się
-          </button>
+          {getAuthBtn(
+            'rounded-md border border-black p-2 px-4 hover:bg-black hover:text-white',
+          )}
         </div>
       </div>
 
-      <div className='mr-4 md:hidden' onClick={()=> setNav(!nav)}>
+      <div className='mr-4 md:hidden' onClick={() => setNav(!nav)}>
         {!nav ? <MenuIcon className='w-5' /> : <XIcon className='w-5' />}
       </div>
 
       <ul className={!nav ? 'hidden' : styles.navbar_mobile}>
-        <IoCloseSharp className='self-end text-3xl z-100' onClick={()=> setNav(!nav)}/>
+        <IoCloseSharp
+          className='z-100 self-end text-3xl'
+          onClick={() => setNav(!nav)}
+        />
         {navigationElements.map((e) => e)}
         <div className='my-4 flex flex-col'>
-          <button className='rounded-md border border-black p-2 px-4 hover:bg-black hover:text-white'>
-            Zaloguj się
-          </button>
+          {getAuthBtn(
+            'rounded-md border border-black p-2 px-4 hover:bg-black hover:text-white',
+          )}
         </div>
       </ul>
     </div>
