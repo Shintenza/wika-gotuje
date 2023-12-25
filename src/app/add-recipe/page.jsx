@@ -7,8 +7,17 @@ import Image from 'next/image';
 import InteractiveList from '@components/InteractiveList';
 import FilterInput from '@components/FilterInput';
 import PageSpinner from '@components/PageSpinner';
+import { signIn, useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 
 const Page = () => {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callbackUrl=/add-recipe");
+    },
+  });
+
   const [recipeName, setRecipeName] = useState('');
   const [recipeImage, setRecipeImage] = useState(null);
   const [filters, setFilters] = useState(null);
@@ -51,8 +60,8 @@ const Page = () => {
   }, []);
 
   const submitRecipe = () => {
-    console.log("To be continued");
-  }
+    console.log('To be continued');
+  };
 
   if (!filters) {
     return <PageSpinner />;
