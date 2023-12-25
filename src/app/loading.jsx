@@ -1,5 +1,7 @@
+import PageSpinner from "@components/PageSpinner";
+
 const Loading = () => {
-  return <h1>Loading</h1>;
+  return <PageSpinner/>
 };
 
 export default Loading;

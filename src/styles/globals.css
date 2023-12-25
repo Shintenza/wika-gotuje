@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Lato', sans-serif;
   color: #000;
@@ -13,4 +17,3 @@ body {
 .page_padding {
   @apply px-[10px] sm:px-[60px] lg:px-[120px];
 }
-

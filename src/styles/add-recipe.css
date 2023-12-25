@@ -1,0 +1,24 @@
+.section_header {
+ @apply mb-10 border-b-[3px] border-solid border-w_orange pb-10 font-secondary text-4xl
+}
+.add_recipe label {
+  @apply block text-lg mb-3;
+}
+
+.basic_input {
+  @apply w-full bg-w_gray p-3 rounded-lg;
+}
+
+.add_img_btn {
+  @apply w-full h-full bg-w_gray rounded-lg relative;
+}
+
+.add_img_btn svg {
+  margin: auto;
+  @apply text-6xl text-gray-400;
+}
+
+.add_img_btn img {
+  @apply rounded-lg object-center object-contain;
+}
+

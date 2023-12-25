@@ -17,7 +17,6 @@ const Navbar = () => {
 
   const [nav, setNav] = useState(false);
   const { data: session, status } = useSession();
-  console.log(session);
 
   const navigationElements = [
     <Link
@@ -50,14 +49,13 @@ const Navbar = () => {
     </Link>,
   ];
   const getAuthBtn = (classesString) => {
-    if (status == 'unauthenticated') {
+    if (status == 'unauthenticated' || status == 'loading') {
       return (
         <button className={classesString} onClick={() => signIn()}>
           Zaloguj się
         </button>
       );
-    }
-    if (status == 'authenticated') {
+    } else {
       return (
         <Image
           src={session.user.image}
