@@ -23,43 +23,48 @@ const recipeSchema = new Schema({
     type: Number,
     required: true,
     min: 1,
-    max: 50
+    max: 50,
   },
   starReviews: [
     {
       stars: { type: Number, min: 1, max: 5 },
-      authorId: { type: Schema.Type.ObjectId, ref: 'User', required: true },
+      authorId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     },
   ],
   comments: [
     {
-      authorId: { type: Schema.Type.ObjectId, ref: 'User', required: true },
+      authorId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
       commentDateAdded: { type: Date, required: true },
       content: { type: String, required: true, minlength: 10 },
     },
   ],
-  ingredients: [
-    {
-      ingredientName: { type: String, required: true },
+  ingredients: {
+    type: [String],
+    validate: {
+      validator: function(array) {
+        return array.length >= 2;
+      },
+      message: 'at least two ingredients are required',
     },
-  ],
-  steps: [
-    {
-      stepName: { type: String },
+  },
+  steps: {
+    type: [String],
+    validate: {
+      validator: function(array) {
+        return array.length >= 2;
+      },
+      message: 'at least two steps are required',
     },
-  ],
-  diet: [
-    {
-      dietName: { type: String },
-    },
-  ],
-  region: [
-    {
-      regionName: { type: String },
-    },
-  ],
+  },
+  diet: {
+    type: [String],
+  },
+  region: {
+    type: [String],
+  },
+  image: { type: String, required: true },
   authorId: { type: Schema.Types.ObjectId, ref: 'User' },
-  dateAdded: { type: Date, required: true },
+  dateAdded: { type: Date, default: Date.now },
   dateUpdated: Date,
 });
 

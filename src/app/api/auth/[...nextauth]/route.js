@@ -54,6 +54,7 @@ const authOptions = {
       if (user) {
         token.role = user.role;
         token.id = user.id;
+        console.log("testtt")
       }
       return token;
     },

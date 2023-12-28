@@ -25,7 +25,7 @@ const Page = () => {
   const [recipeImage, setRecipeImage] = useState(null);
   const [filters, setFilters] = useState(null);
 
-  const [recipeCategory, setRecipeCategory] = useState(['']);
+  const [recipeCategory, setRecipeCategory] = useState('');
   const [ingredientsAval, setIngredientsAval] = useState('');
   const [dietType, setDietType] = useState([]);
   const [region, setRegion] = useState([]);
@@ -63,7 +63,8 @@ const Page = () => {
     getFilters();
   }, []);
 
-  const submitRecipe = () => {
+  const submitRecipe = async () => {
+
     if (
       recipeName.length < 3 ||
       !recipeImage ||
@@ -80,20 +81,29 @@ const Page = () => {
       return;
     }
 
-    const recipe = {
-      name: recipeName,
-      prepTime: prepTime,
-      ingredientsAvaliability: ingredientsAval,
-      difficulty: advancementLevel,
-      portionsNumber: portionsNumber,
-      ingredients: recipeIngredients.current,
-      steps: recipeSteps.current,
-      diet: dietType,
-      region,
-      image: recipeImage,
-    };
 
-    console.log(recipe)
+    const data = new FormData()
+    data.set('name', recipeName)
+    data.set('prepTime', prepTime)
+    data.set('ingredientsAvaliability', ingredientsAval)
+    data.set('difficulty', advancementLevel)
+    data.set('portionsNumber', portionsNumber)
+    data.set('ingredients', JSON.stringify(recipeIngredients.current))
+    data.set('steps', JSON.stringify(recipeSteps.current))
+    data.set('diet', JSON.stringify(dietType))
+    data.set('region', JSON.stringify(region))
+    data.set('image', recipeImage)
+
+
+    const response = await fetch("/api/add-recipe", {
+      method: 'POST',
+      body: data 
+    })
+    if (response.status == 200) {
+      // TODO make it complete
+      console.log("Kurwa jest w pytę");
+    }
+
   };
 
   if (!filters) {
