@@ -9,7 +9,7 @@ const FilterInput = ({
         {filterObj.filterDisplayName}
       </label>
       <select
-        className='basic_input mt-3'
+        className='basic_input'
         name='filer_input'
         id='filter_input'
         value={stateElem}

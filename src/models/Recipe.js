@@ -4,7 +4,7 @@ const recipeSchema = new Schema({
   name: {
     type: String,
     required: true,
-    minlength: 2,
+    minlength: 3,
   },
   prepTime: {
     type: Number,
@@ -23,6 +23,7 @@ const recipeSchema = new Schema({
     type: Number,
     required: true,
     min: 1,
+    max: 50
   },
   starReviews: [
     {

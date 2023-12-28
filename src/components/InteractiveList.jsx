@@ -12,9 +12,6 @@ const InteractiveList = ({ listTitle, placeholder, mainArray }) => {
     mainArray.current = listElements;
   }, [listElements])
 
-  const updateMainArray = () => {
-  };
-
   const handleAddElement = (element) => {
     if (element.length <= 5) return;
     setListElements((current) => [...current, element]);

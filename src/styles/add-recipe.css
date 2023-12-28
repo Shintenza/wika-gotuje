@@ -6,7 +6,7 @@
 }
 
 .basic_input {
-  @apply w-full bg-w_gray p-3 rounded-lg;
+  @apply w-full bg-w_gray p-3 rounded-lg mt-3;
 }
 
 .add_img_btn {
@@ -22,3 +22,7 @@
   @apply rounded-lg object-center object-contain;
 }
 
+.error_msg {
+  color: red;
+  margin-left: 5px;
+}

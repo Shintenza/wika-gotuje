@@ -19,6 +19,8 @@ const Page = () => {
     },
   });
 
+  const [isError, setIsError] = useState(false);
+
   const [recipeName, setRecipeName] = useState('');
   const [recipeImage, setRecipeImage] = useState(null);
   const [filters, setFilters] = useState(null);
@@ -28,7 +30,8 @@ const Page = () => {
   const [dietType, setDietType] = useState([]);
   const [region, setRegion] = useState([]);
   const [advancementLevel, setAdvancementLevel] = useState('');
-  const [prepTime, setPrepTime] = useState('');
+  const [prepTime, setPrepTime] = useState(0);
+  const [portionsNumber, setPortionsNumber] = useState(1);
 
   const recipeIngredients = useRef([]);
   const recipeSteps = useRef([]);
@@ -61,7 +64,34 @@ const Page = () => {
   }, []);
 
   const submitRecipe = () => {
-    console.log('To be continued');
+    if (
+      recipeName.length < 3 ||
+      !recipeImage ||
+      recipeSteps.current.length < 2 ||
+      recipeIngredients.current.length < 2 ||
+      prepTime <= 0 ||
+      portionsNumber <= 0 ||
+      portionsNumber > 100
+    ) {
+      setIsError(true);
+      const isBrowser = typeof window !== 'undefined';
+      if (!isBrowser) return;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    const recipe = {
+      name: recipeName,
+      prepTime: prepTime,
+      ingredientsAvaliability: ingredientsAval,
+      difficulty: advancementLevel,
+      portionsNumber: portionsNumber,
+      ingredients: recipeIngredients,
+      steps: recipeSteps,
+      diet: dietType,
+      region,
+      image: recipeImage,
+    };
   };
 
   if (!filters) {
@@ -83,7 +113,13 @@ const Page = () => {
             className='basic_input'
             onChange={(e) => setRecipeName(e.target.value)}
           />
+          {isError && recipeName.length < 3 && (
+            <p className='error_msg'>
+              Nazwa przepisu musi zawierać co najmniej 3 znaki
+            </p>
+          )}
         </div>
+
         <div className='col-span-2'>
           <FilterInput
             filterObj={filters['recipe_category']}
@@ -114,6 +150,9 @@ const Page = () => {
               <MdAddPhotoAlternate />
             )}
           </button>
+          {isError && !recipeImage && (
+            <p className='error_msg'>Musisz dodać zdjęcie do przepisu</p>
+          )}
         </div>
       </div>
       <h1 className='section_header'></h1>
@@ -122,11 +161,28 @@ const Page = () => {
         placeholder='Wpisz składnik i jego ilość'
         mainArray={recipeIngredients}
       />
+
+      {isError && recipeIngredients.current.length < 2 ? (
+        <p className='error_msg'>
+          Przepis powinien wymagać co najmniej 2 składników
+        </p>
+      ) : (
+        ''
+      )}
+
       <InteractiveList
         listTitle='Lista kroków'
         placeholder='Wpisz opis kroku'
         mainArray={recipeSteps}
       />
+      {isError && recipeSteps.current.length < 2 ? (
+        <p className='error_msg'>
+          Przepis powinien składać się z co najmniej 2 kroków
+        </p>
+      ) : (
+        ''
+      )}
+
       <h1 className='section_header'></h1>
       <h2 className='mb-4 text-2xl'>Dodatkowe informacje</h2>
 
@@ -149,18 +205,51 @@ const Page = () => {
           setOptions={setDietType}
         />
 
-        <FilterInput
-          filterObj={filters['prep_time']}
-          stateElem={prepTime}
-          setStateElem={setPrepTime}
-        />
+        <div>
+          <label className='text-lg'>Czas przygotowania (w min)</label>
+          <input
+            type='number'
+            value={prepTime}
+            className='basic_input'
+            onChange={(e) => setPrepTime(e.target.value)}
+          />
+          {isError && prepTime <= 0 && (
+            <p className='error_msg'>
+              Czas przygotowania musi być większy od 0
+            </p>
+          )}
+        </div>
 
         <MultiSelectDropdown
           options={filters['region'].avaliableOptions}
           inputName={filters['region'].filterDisplayName}
           setOptions={setRegion}
         />
+
+        <div>
+          <label className='text-lg'>Liczba porcji</label>
+          <input
+            type='number'
+            min={0}
+            max={20}
+            value={portionsNumber}
+            className='basic_input'
+            onChange={(e) => setPortionsNumber(e.target.value)}
+          />
+
+          {isError && (portionsNumber <= 0 || portionsNumber > 100) && (
+            <p className='error_msg'>
+              Liczba porcji musi być większa od 0 ale mniejsza od 50
+            </p>
+          )}
+        </div>
       </div>
+      <button
+        className='mt-10 w-full rounded-lg bg-black p-3 text-white'
+        onClick={submitRecipe}
+      >
+        Dodaj przepis
+      </button>
     </div>
   );
 };

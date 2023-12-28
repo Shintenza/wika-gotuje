@@ -6,7 +6,7 @@ const ListInput = ({ handleAdd, placeholder }) => {
   const [inputValue, setInputValue] = useState('');
 
   return (
-    <div className='mb-4'>
+    <div className='mt-4'>
       <div className='flex items-center'>
         <input
           type='text'
