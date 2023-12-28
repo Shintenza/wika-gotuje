@@ -25,7 +25,7 @@ const Page = () => {
   const [recipeImage, setRecipeImage] = useState(null);
   const [filters, setFilters] = useState(null);
 
-  const [recipeCategory, setRecipeCategory] = useState('');
+  const [recipeCategory, setRecipeCategory] = useState(['']);
   const [ingredientsAval, setIngredientsAval] = useState('');
   const [dietType, setDietType] = useState([]);
   const [region, setRegion] = useState([]);
@@ -86,12 +86,14 @@ const Page = () => {
       ingredientsAvaliability: ingredientsAval,
       difficulty: advancementLevel,
       portionsNumber: portionsNumber,
-      ingredients: recipeIngredients,
-      steps: recipeSteps,
+      ingredients: recipeIngredients.current,
+      steps: recipeSteps.current,
       diet: dietType,
       region,
       image: recipeImage,
     };
+
+    console.log(recipe)
   };
 
   if (!filters) {

@@ -1,8 +1,14 @@
+import { useEffect } from "react";
+
 const FilterInput = ({
   filterObj,
   stateElem,
   setStateElem,
 }) => {
+
+  useEffect(()=> {
+    setStateElem(filterObj.avaliableOptions[0])
+  }, [])
   return (
     <div>
       <label htmlFor='filter_input' className='text-lg'>
