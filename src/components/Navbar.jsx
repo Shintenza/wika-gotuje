@@ -9,7 +9,7 @@ import { IoCloseSharp } from 'react-icons/io5';
 import styles from '@styles/Navbar.module.css';
 
 import wikagotuje_logo from '../../public/logo.svg';
-import { usePathname } from 'next/navigation';
+import { redirect, usePathname } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
 const Navbar = () => {
@@ -63,7 +63,10 @@ const Navbar = () => {
           width={50}
           height={50}
           className='rounded-full shadow-md'
-          onClick={() => signOut()}
+          onClick={() => {
+            signOut();
+            redirect('/');
+          }}
         />
       );
     }

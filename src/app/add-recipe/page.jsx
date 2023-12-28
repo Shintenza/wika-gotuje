@@ -7,14 +7,15 @@ import Image from 'next/image';
 import InteractiveList from '@components/InteractiveList';
 import FilterInput from '@components/FilterInput';
 import PageSpinner from '@components/PageSpinner';
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
+import MultiSelectDropdown from '@components/MultiSelectDropdown';
 
 const Page = () => {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
-      redirect("/api/auth/signin?callbackUrl=/add-recipe");
+      redirect('/api/auth/signin?callbackUrl=/add-recipe');
     },
   });
 
@@ -24,8 +25,8 @@ const Page = () => {
 
   const [recipeCategory, setRecipeCategory] = useState('');
   const [ingredientsAval, setIngredientsAval] = useState('');
-  const [dietType, setDietType] = useState('');
-  const [region, setRegion] = useState('');
+  const [dietType, setDietType] = useState([]);
+  const [region, setRegion] = useState([]);
   const [advancementLevel, setAdvancementLevel] = useState('');
   const [prepTime, setPrepTime] = useState('');
 
@@ -142,10 +143,10 @@ const Page = () => {
           setStateElem={setIngredientsAval}
         />
 
-        <FilterInput
-          filterObj={filters['diet_type']}
-          stateElem={dietType}
-          setStateElem={setDietType}
+        <MultiSelectDropdown
+          options={filters['diet_type'].avaliableOptions}
+          inputName={filters['diet_type'].filterDisplayName}
+          setOptions={setDietType}
         />
 
         <FilterInput
@@ -154,10 +155,10 @@ const Page = () => {
           setStateElem={setPrepTime}
         />
 
-        <FilterInput
-          filterObj={filters['region']}
-          stateElem={region}
-          setStateElem={setRegion}
+        <MultiSelectDropdown
+          options={filters['region'].avaliableOptions}
+          inputName={filters['region'].filterDisplayName}
+          setOptions={setRegion}
         />
       </div>
     </div>

@@ -13,7 +13,6 @@ const InteractiveList = ({ listTitle, placeholder, mainArray }) => {
   }, [listElements])
 
   const updateMainArray = () => {
-    console.log(mainArray)
   };
 
   const handleAddElement = (element) => {

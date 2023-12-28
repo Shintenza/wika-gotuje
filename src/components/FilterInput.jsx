@@ -1,5 +1,8 @@
-const FilterInput = ({ filterObj, stateElem, setStateElem }) => {
-
+const FilterInput = ({
+  filterObj,
+  stateElem,
+  setStateElem,
+}) => {
   return (
     <div>
       <label htmlFor='filter_input' className='text-lg'>

@@ -47,6 +47,16 @@ const recipeSchema = new Schema({
       stepName: { type: String },
     },
   ],
+  diet: [
+    {
+      dietName: { type: String },
+    },
+  ],
+  region: [
+    {
+      regionName: { type: String },
+    },
+  ],
   authorId: { type: Schema.Types.ObjectId, ref: 'User' },
   dateAdded: { type: Date, required: true },
   dateUpdated: Date,
