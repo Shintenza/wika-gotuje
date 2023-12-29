@@ -33,7 +33,7 @@ const authOptions = {
           user.role = 'user';
           const newDbUser = new User({
             email: profile.email,
-            name: profile.name,
+            name: profile.name == null ? profile.login : profile.name,
             role: 'user',
             image: user.image,
           });
@@ -54,7 +54,7 @@ const authOptions = {
       if (user) {
         token.role = user.role;
         token.id = user.id;
-        console.log("testtt")
+        console.log('testtt');
       }
       return token;
     },
