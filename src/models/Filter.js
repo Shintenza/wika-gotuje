@@ -9,7 +9,7 @@ const filterSchema = new Schema({
     type: String,
     required: true,
   },
-  avaliableOptions: [
+  availableOptions: [
     {
       type: String,
     },

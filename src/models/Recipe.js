@@ -11,7 +11,7 @@ const recipeSchema = new Schema({
     required: true,
     min: 0,
   },
-  ingredientsAvaliability: {
+  ingredientsAvailability: {
     type: String,
     required: true,
   },

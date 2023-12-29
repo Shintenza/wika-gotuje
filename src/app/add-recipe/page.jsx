@@ -64,7 +64,6 @@ const Page = () => {
   }, []);
 
   const submitRecipe = async () => {
-
     if (
       recipeName.length < 3 ||
       !recipeImage ||
@@ -81,29 +80,26 @@ const Page = () => {
       return;
     }
 
+    const data = new FormData();
+    data.set('name', recipeName);
+    data.set('prepTime', prepTime);
+    data.set('ingredientsAvailability', ingredientsAval);
+    data.set('difficulty', advancementLevel);
+    data.set('portionsNumber', portionsNumber);
+    data.set('ingredients', JSON.stringify(recipeIngredients.current));
+    data.set('steps', JSON.stringify(recipeSteps.current));
+    data.set('diet', JSON.stringify(dietType));
+    data.set('region', JSON.stringify(region));
+    data.set('image', recipeImage);
 
-    const data = new FormData()
-    data.set('name', recipeName)
-    data.set('prepTime', prepTime)
-    data.set('ingredientsAvaliability', ingredientsAval)
-    data.set('difficulty', advancementLevel)
-    data.set('portionsNumber', portionsNumber)
-    data.set('ingredients', JSON.stringify(recipeIngredients.current))
-    data.set('steps', JSON.stringify(recipeSteps.current))
-    data.set('diet', JSON.stringify(dietType))
-    data.set('region', JSON.stringify(region))
-    data.set('image', recipeImage)
-
-
-    const response = await fetch("/api/add-recipe", {
+    const response = await fetch('/api/add-recipe', {
       method: 'POST',
-      body: data 
-    })
+      body: data,
+    });
     if (response.status == 200) {
       // TODO make it complete
-      console.log("Kurwa jest w pytę");
+      console.log('Kurwa jest w pytę');
     }
-
   };
 
   if (!filters) {
@@ -206,13 +202,13 @@ const Page = () => {
         />
 
         <FilterInput
-          filterObj={filters['ingredients_avaliability']}
+          filterObj={filters['ingredients_availability']}
           stateElem={ingredientsAval}
           setStateElem={setIngredientsAval}
         />
 
         <MultiSelectDropdown
-          options={filters['diet_type'].avaliableOptions}
+          options={filters['diet_type'].availableOptions}
           inputName={filters['diet_type'].filterDisplayName}
           setOptions={setDietType}
         />
@@ -233,7 +229,7 @@ const Page = () => {
         </div>
 
         <MultiSelectDropdown
-          options={filters['region'].avaliableOptions}
+          options={filters['region'].availableOptions}
           inputName={filters['region'].filterDisplayName}
           setOptions={setRegion}
         />

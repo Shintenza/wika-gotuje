@@ -1,14 +1,9 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-const FilterInput = ({
-  filterObj,
-  stateElem,
-  setStateElem,
-}) => {
-
-  useEffect(()=> {
-    setStateElem(filterObj.avaliableOptions[0])
-  }, [])
+const FilterInput = ({ filterObj, stateElem, setStateElem }) => {
+  useEffect(() => {
+    setStateElem(filterObj.availableOptions[0]);
+  }, []);
   return (
     <div>
       <label htmlFor='filter_input' className='text-lg'>
@@ -21,7 +16,7 @@ const FilterInput = ({
         value={stateElem}
         onChange={(e) => setStateElem(e.target.value)}
       >
-        {filterObj.avaliableOptions.map((categoryName, count) => {
+        {filterObj.availableOptions.map((categoryName, count) => {
           return (
             <option value={categoryName} key={count}>
               {categoryName}

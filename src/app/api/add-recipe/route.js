@@ -42,20 +42,20 @@ export const POST = async (req) => {
     const newRecipe = await Recipe.create({
       name: data.get('name'),
       prepTime: parseInt(data.get('prepTime')),
-      ingredientsAvaliability: data.get('ingredientsAvaliability'),
+      ingredientsAvailability: data.get('ingredientsAvailability'),
       difficulty: data.get('difficulty'),
       portionsNumber: data.get('portionsNumber'),
-      ingredients: ["test", "testttttt"],
+      ingredients: ['test', 'testttttt'],
       steps: JSON.parse(data.get('steps')),
       diet: JSON.parse(data.get('diet')),
       region: JSON.parse(data.get('region')),
       image: savePath + newFileName,
       authorId: token.id,
     });
-    // TODO return newRecipe id 
-    return new Response("ok", { status: 200 });
+    // TODO return newRecipe id
+    return new Response('ok', { status: 200 });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return new Response(error, { status: 500 });
   }
 };
