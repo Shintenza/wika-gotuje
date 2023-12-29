@@ -1,6 +1,8 @@
 import { connectDb } from '@utils/connectDb';
 import Filter from '@models/Filter';
 
+export const dynamic = 'force-dynamic';
+
 export const GET = async (req) => {
   try {
     await connectDb();
