@@ -5,93 +5,29 @@ import { BiCommentDetail } from 'react-icons/bi';
 import Task from '@components/Task';
 import CommentList from '@components/CommentList';
 import { MdStar, MdStarHalf, MdStarBorder } from 'react-icons/md';
+import { getRecipe } from '@utils/getRecipe';
 
-export default function Page({ params }) {
-  const recipe = {
-    recipeImg:
-      'https://images.unsplash.com/photo-1622973536968-3ead9e780960?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    reviewAvg: 4.28,
-    title: 'Spaghetti Bolognese',
-    authorImg:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    authorName: 'Stefania Kurwigrzmot',
-    difficulty: 'Łatwy',
-    reviewCount: 2137,
-    date: '02.11.2023',
-    time: 90,
-    isLiked: false,
-    portions: 4,
-    availability: 'Łatwa',
-    ingredients: [
-      '150g boczku',
-      '1 cebula',
-      '2 łodygi selera naciowego',
-      '1 marchewka',
-      '2 łyżki oliwy',
-      '500g mielonego mięsa',
-      '1 szklanka czerwonego wina',
-      '1 szklanka gorącego bulionu',
-      '4 łyżki koncentratu pomidorowego',
-      '1 puszka obranych pomidorów',
-      '1/2 szklanki mleka',
-      'makaron spaghetti (75g/porcję)',
-      'tarty parmezan',
-    ],
-    tasks: [
-      'Boczek pokroić w drobną kostkę i włożyć na dużą patelnię, wytopić na małym ogniu aż się zrumieni. Przesunąć na bok, w wytopiony tłuszcz włożyć drobno posiekaną cebulę i zeszklić. Dodać drobno posiekany seler naciowy i startą marchewkę. Obsmażyć, następnie wszystko przełożyć do garnka.',
-      'Na patelnię wlać oliwę i obsmażyć mięso. Obsmażone mięso przełożyć do garnka z boczkiem i warzywami. Wlać wino i gotować mieszając ok. 5 minut. Dodać gorący bulion i koncentrat pomidorowy, wymieszać. Dodać pomidory z puszki, doprawić solą i pieprzem. Drewnianą łyżką rozdrobnić pomidory i wymieszać.',
-      'Przykryć i gotować na małym ogniu przez minimum 2 godziny, od czasu do czasu mieszając. W połowie gotowania dodać mleko. Podawać z ugotowanym makaronem spaghetti posypując tartym parmezanem.',
-    ],
-    comments: [
-      {
-        authorImg:
-          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        authorName: 'Karosław Jaczyński',
-        date: '11.11.2023',
-        text: 'Mniam, ale wchodzi',
-      },
-      {
-        authorImg:
-          'https://images.unsplash.com/photo-1615813967515-e1838c1c5116?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        authorName: 'Norbert Krzywonogi',
-        date: '12.11.2023',
-        text: 'Autorka nie zna się na gotowaniu. Sos leje się jak sraka. Przez ciebie zmarnowane pół kilo mięsa pajacu.',
-      },
-      {
-        authorImg:
-          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        authorName: 'Stefania Kurwigrzmot',
-        date: '12.11.2023',
-        text: 'Sam się nie znasz na gotowaniu, sos jest w pyte!',
-      },
-      {
-        authorImg:
-          'https://images.unsplash.com/photo-1554151228-14d9def656e4?q=80&w=3086&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        authorName: 'Patrycja Parówka',
-        date: '15.11.2023',
-        text: 'Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.',
-      },
-      {
-        authorImg:
-          'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=3161&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        authorName: 'Barbara Miller',
-        date: '17.11.2023',
-        text: 'Zdefekowałam po tym.',
-      },
-    ],
-  };
+export default async function Page({ params }) {
+  const recipe = await getRecipe(params.id);
+
+  const avgRating =
+    recipe.starReviews.length == 0
+      ? 0
+      : recipe.starReviews.reduce((a, b) => {
+          return a + b.stars;
+        }, 0) / recipe.starReviews.length;
 
   const returnStars = () => {
     const stars = [];
     let starIndex = 0;
 
-    let decimalPart = recipe.reviewAvg - Math.floor(recipe.reviewAvg);
+    let decimalPart = avgRating - Math.floor(avgRating);
 
     if (decimalPart <= 0.25) decimalPart = 0;
     else if (decimalPart >= 0.75) decimalPart = 1;
     else decimalPart = 0.5;
 
-    for (let i = 0; i < Math.floor(recipe.reviewAvg + decimalPart); i++) {
+    for (let i = 0; i < Math.floor(avgRating + decimalPart); i++) {
       stars.push(<MdStar color='#FF8051' key={starIndex} />);
       starIndex++;
     }
@@ -102,9 +38,7 @@ export default function Page({ params }) {
     }
 
     const starsLeft =
-      5 -
-      (Math.floor(recipe.reviewAvg + decimalPart) +
-        (decimalPart === 0.5 ? 1 : 0));
+      5 - (Math.floor(avgRating + decimalPart) + (decimalPart === 0.5 ? 1 : 0));
 
     for (let i = 0; i < starsLeft; i++) {
       stars.push(<MdStarBorder color='#FF8051' key={starIndex} />);
@@ -116,24 +50,25 @@ export default function Page({ params }) {
 
   return (
     <div className='page_padding'>
-      <h1 className='py-[35px] font-secondary text-4xl'>{recipe.title}</h1>
+      <h1 className='py-[35px] font-secondary text-4xl'>{recipe.name}</h1>
 
       <div className='flex flex-wrap items-center gap-6 text-sm'>
         <div className='relative h-[44px] w-[44px]'>
           <Image
-            src={recipe.authorImg}
+            src={recipe.authorId.image}
             fill
             className='rounded-full object-cover'
-            alt={recipe.authorName}
+            alt={recipe.authorId.name}
           />
         </div>
-        <p className='text-lg'>{recipe.authorName}</p>
+        <p className='text-lg'>{recipe.authorId.name}</p>
         <button className='rounded-lg bg-w_orange px-5 py-1 text-white hover:opacity-80'>
           Obserwuj
         </button>
         <div>
           <p className='inline-block pr-3'>
-            <FaRegCalendarAlt className='inline-block text-lg' /> {recipe.date}
+            <FaRegCalendarAlt className='inline-block text-lg' />{' '}
+            {recipe.dateAdded.toString()}
           </p>
           <p className='inline-block'>
             <BiCommentDetail className='inline-block text-lg' />{' '}
@@ -144,10 +79,10 @@ export default function Page({ params }) {
 
       <div className='relative mt-10 h-[600px] w-full overflow-hidden'>
         <Image
-          src={recipe.recipeImg}
+          src={recipe.image}
           fill
           className='rounded-xl object-cover'
-          alt={recipe.title}
+          alt={recipe.name}
         />
       </div>
 
@@ -155,12 +90,13 @@ export default function Page({ params }) {
         <div className='flex flex-col divide-y divide-black font-light uppercase sm:flex-row sm:divide-x sm:divide-y-0'>
           <div className='pb-4 text-center sm:py-0 sm:pr-8'>
             <p className='text-gray-500'>Czas</p>
-            <p>{recipe.time} min</p>
+            <p>{recipe.prepTime} min</p>
           </div>
           <div className='py-4 text-center sm:px-8 sm:py-0'>
             <p className='text-gray-500'>Porcje</p>
             <p>
-              {recipe.portions} {recipe.portions > 1 ? 'osoby' : 'osoba'}
+              {recipe.portionsNumber}{' '}
+              {recipe.portionsNumber > 1 ? 'osoby' : 'osoba'}
             </p>
           </div>
           <div className='py-4 text-center sm:px-8 sm:py-0'>
@@ -169,7 +105,7 @@ export default function Page({ params }) {
           </div>
           <div className='pt-4 text-center sm:py-0 sm:pl-8'>
             <p className='text-gray-500'>Dostępność składników</p>
-            <p>{recipe.availability}</p>
+            <p>{recipe.ingredientsAvailability}</p>
           </div>
         </div>
 
@@ -190,7 +126,7 @@ export default function Page({ params }) {
         </div>
         <div className=''>
           <h2 className='pb-4 text-2xl font-bold'>Kroki przygotowania</h2>
-          {recipe.tasks.map((task, key) => (
+          {recipe.steps.map((task, key) => (
             <Task task={task} recipeId={params.id} key={key} />
           ))}
         </div>
@@ -209,7 +145,7 @@ export default function Page({ params }) {
       <h2 className='pb-4 pt-12 font-secondary text-3xl'>Oceń przepis</h2>
       <div className='flex flex-wrap items-center'>
         <div className='pr-10 text-xl'>
-          Średnia {recipe.reviewAvg}/5 ({recipe.reviewCount} głosów)
+          Średnia {avgRating}/5 ({recipe.starReviews.length} głosów)
         </div>
         <div className='flex gap-3 text-6xl'>{returnStars()}</div>
       </div>
