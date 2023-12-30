@@ -30,7 +30,7 @@ const InteractiveList = ({ listTitle, placeholder, mainArray }) => {
 
   return (
     <>
-      <h2 className='text-2xl mb-4'>{listTitle}</h2>
+      <h2 className='text-2xl mb-4 mt-4'>{listTitle}</h2>
 
       <ul className='list-disc'>
         {listElements.map((ingredient, index) => {

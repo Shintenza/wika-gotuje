@@ -12,9 +12,8 @@ const ListInput = ({ handleAdd, placeholder }) => {
           type='text'
           name=''
           id=''
-          size='50'
           placeholder={placeholder}
-          className='block h-full rounded-l-lg bg-w_gray p-3 outline-none'
+          className='block h-full rounded-l-lg bg-w_gray p-3 outline-none w-full md:w-3/4 lg:w-2/5'
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />

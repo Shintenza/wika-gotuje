@@ -109,8 +109,8 @@ const Page = () => {
   return (
     <div className='page_padding'>
       <h1 className='section_header'>Dodaj przepis</h1>
-      <div className='add_recipe mb-10 grid grid-cols-4 grid-rows-2 gap-x-4 gap-y-16'>
-        <div className='col-span-2'>
+      <div className='add_recipe mb-10 grid grid-cols-1 sm:grid-rows-4 sm:grid-cols-4 sm:grid-rows-2 gap-x-4 gap-y-16'>
+        <div className='sm:col-span-2'>
           <label htmlFor='recipe_name'>Nazwa przepisu</label>
           <input
             value={recipeName}
@@ -128,14 +128,14 @@ const Page = () => {
           )}
         </div>
 
-        <div className='col-span-2'>
+        <div className='sm:col-span-2'>
           <FilterInput
             filterObj={filters['recipe_category']}
             stateElem={recipeCategory}
             setStateElem={setRecipeCategory}
           />
         </div>
-        <div className='col-span-2 col-start-3 row-span-2 row-start-1'>
+        <div className='sm:col-span-2 sm:col-start-3 row-span-3 sm:row-span-2 sm:row-start-1'>
           <label className='text-lg'>Wybierz zdjęcie</label>
           <input
             type='file'
@@ -194,7 +194,7 @@ const Page = () => {
       <h1 className='section_header'></h1>
       <h2 className='mb-4 text-2xl'>Dodatkowe informacje</h2>
 
-      <div className='grid grid-cols-3 gap-4'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
         <FilterInput
           filterObj={filters['advancement_level']}
           stateElem={advancementLevel}
