@@ -1,77 +1,28 @@
-'use client';
-
-import { useState } from 'react';
-
 import Image from 'next/image';
 import Link from 'next/link';
 
-import {
-  FaStar,
-  FaRegStarHalfStroke,
-  FaRegStar,
-  FaHeart,
-  FaRegHeart,
-} from 'react-icons/fa6';
 import { FaFire, FaRegCalendarAlt, FaRegClock } from 'react-icons/fa';
 import { BiCommentDetail } from 'react-icons/bi';
+import { getRecipe } from '@utils/getRecipe';
+import getStars from '@utils/getStars';
+import RecipeLikeButton from '@components/RecipeLikeButton';
 
-const RecipeCard = ({ recipe }) => {
-  const [isLiked, setIsLiked] = useState(recipe.isLiked);
-
-  const handleIsLiked = () => {
-    setIsLiked(!isLiked);
-  };
-
-  const returnStars = () => {
-    const stars = [];
-    let starIndex = 0;
-
-    let decimalPart = recipe.reviewAvg - Math.floor(recipe.reviewAvg);
-
-    if (decimalPart <= 0.25) decimalPart = 0;
-    else if (decimalPart >= 0.75) decimalPart = 1;
-    else decimalPart = 0.5;
-
-    for (let i = 0; i < Math.floor(recipe.reviewAvg + decimalPart); i++) {
-      stars.push(<FaStar color='#FF8051' key={starIndex} />);
-      starIndex++;
-    }
-
-    if (decimalPart === 0.5) {
-      stars.push(<FaRegStarHalfStroke color='#FF8051' key={starIndex} />);
-      starIndex++;
-    }
-
-    const starsLeft =
-      5 -
-      (Math.floor(recipe.reviewAvg + decimalPart) +
-        (decimalPart === 0.5 ? 1 : 0));
-
-    for (let i = 0; i < starsLeft; i++) {
-      stars.push(<FaRegStar color='#FF8051' key={starIndex} />);
-      starIndex++;
-    }
-
-    return stars;
-  };
+const RecipeCard = async ({ recipeId }) => {
+  const recipe = await getRecipe(recipeId);
+  const [_avgRating, stars] = getStars(recipe.starReviews);
+  const formatter = new Intl.DateTimeFormat('pl-PL', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
 
   return (
     <div className='relative flex w-full flex-col rounded-lg bg-w_gray'>
-      <div
-        className='absolute right-0 top-0 z-10 mr-2 mt-2 h-[30px] w-[30px] rounded-full bg-white hover:cursor-pointer'
-        onClick={handleIsLiked}
-      >
-        {isLiked ? (
-          <FaHeart className='m-auto h-full' color='#FF8051' />
-        ) : (
-          <FaRegHeart className='m-auto h-full' color='#FF8501' />
-        )}
-      </div>
-
-      <Link href={`recipe/${recipe.id}`}>
+      <RecipeLikeButton />
+      <Link href={`recipe/${recipe._id}`}>
         <div className=' relative min-h-[227px] w-full '>
           <Image
-            src={recipe.recipeImg}
+            src={recipe.image}
             fill
             alt='food image'
             className='rounded-t-lg object-cover'
@@ -80,24 +31,26 @@ const RecipeCard = ({ recipe }) => {
         <div className='flex flex-col gap-2 px-2 py-1'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center'>
-              {returnStars()}
-              <p className='pl-2 font-light'>{recipe.reviewCount} ocen</p>
+              {stars}
+              <p className='pl-2 font-light'>
+                {recipe.starReviews.length} ocen
+              </p>
             </div>
             <p className='font-light'>
-              <FaRegClock className='inline-block' /> {recipe.time}
+              <FaRegClock className='inline-block' /> {recipe.prepTime}
             </p>
           </div>
-          <h1 className='block w-full text-2xl font-bold'>{recipe.title}</h1>
+          <h1 className='block w-full text-2xl font-bold'>{recipe.name}</h1>
           <div className='flex items-center gap-2'>
             <div className='relative h-[38px] w-[38px]'>
               <Image
-                src={recipe.authorImg}
+                src={recipe.authorId.image}
                 fill
                 className='rounded-full object-cover'
                 alt='author image'
               />
             </div>
-            <p className='font-light'>{recipe.authorName}</p>
+            <p className='font-light'>{recipe.authorId.name}</p>
           </div>
           <div className='flex justify-between'>
             <p>
@@ -107,11 +60,13 @@ const RecipeCard = ({ recipe }) => {
             <div>
               <p className='inline-block pr-1'>
                 <FaRegCalendarAlt className='inline-block' />{' '}
-                <span className='font-light'>{recipe.date}</span>
+                <span className='font-light'>
+                  {formatter.format(recipe.dateAdded)}
+                </span>
               </p>
               <p className='inline-block'>
                 <BiCommentDetail className='inline-block' />{' '}
-                <span className='font-light'>{recipe.commentCount}</span>
+                <span className='font-light'>{recipe.comments.length}</span>
               </p>
             </div>
           </div>

@@ -4,49 +4,17 @@ import { PiPrinterLight } from 'react-icons/pi';
 import { BiCommentDetail } from 'react-icons/bi';
 import Task from '@components/Task';
 import CommentList from '@components/CommentList';
-import { MdStar, MdStarHalf, MdStarBorder } from 'react-icons/md';
 import { getRecipe } from '@utils/getRecipe';
+import getStars from '@utils/getStars';
 
 export default async function Page({ params }) {
   const recipe = await getRecipe(params.id);
-
-  const avgRating =
-    recipe.starReviews.length == 0
-      ? 0
-      : recipe.starReviews.reduce((a, b) => {
-          return a + b.stars;
-        }, 0) / recipe.starReviews.length;
-
-  const returnStars = () => {
-    const stars = [];
-    let starIndex = 0;
-
-    let decimalPart = avgRating - Math.floor(avgRating);
-
-    if (decimalPart <= 0.25) decimalPart = 0;
-    else if (decimalPart >= 0.75) decimalPart = 1;
-    else decimalPart = 0.5;
-
-    for (let i = 0; i < Math.floor(avgRating + decimalPart); i++) {
-      stars.push(<MdStar color='#FF8051' key={starIndex} />);
-      starIndex++;
-    }
-
-    if (decimalPart === 0.5) {
-      stars.push(<MdStarHalf color='#FF8051' key={starIndex} />);
-      starIndex++;
-    }
-
-    const starsLeft =
-      5 - (Math.floor(avgRating + decimalPart) + (decimalPart === 0.5 ? 1 : 0));
-
-    for (let i = 0; i < starsLeft; i++) {
-      stars.push(<MdStarBorder color='#FF8051' key={starIndex} />);
-      starIndex++;
-    }
-
-    return stars;
-  };
+  const [avgRating, stars] = getStars(recipe.starReviews);
+  const formatter = new Intl.DateTimeFormat('pl-PL', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
 
   return (
     <div className='page_padding'>
@@ -67,8 +35,8 @@ export default async function Page({ params }) {
         </button>
         <div>
           <p className='inline-block pr-3'>
-            <FaRegCalendarAlt className='inline-block text-lg' />{' '}
-            {recipe.dateAdded.toString()}
+            <FaRegCalendarAlt className='inline-block text-lg' /> {}
+            {formatter.format(recipe.dateAdded)}
           </p>
           <p className='inline-block'>
             <BiCommentDetail className='inline-block text-lg' />{' '}
@@ -147,7 +115,7 @@ export default async function Page({ params }) {
         <div className='pr-10 text-xl'>
           Średnia {avgRating}/5 ({recipe.starReviews.length} głosów)
         </div>
-        <div className='flex gap-3 text-6xl'>{returnStars()}</div>
+        <div className='flex gap-3 text-6xl'>{stars}</div>
       </div>
 
       <div className='flex items-center justify-between pb-8 pt-12'>
