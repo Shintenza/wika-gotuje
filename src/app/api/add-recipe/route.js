@@ -45,11 +45,11 @@ export const POST = async (req) => {
       ingredientsAvailability: data.get('ingredientsAvailability'),
       difficulty: data.get('difficulty'),
       portionsNumber: data.get('portionsNumber'),
-      ingredients: ['test', 'testttttt'],
+      ingredients: JSON.parse(data.get('ingredients')),
       steps: JSON.parse(data.get('steps')),
       diet: JSON.parse(data.get('diet')),
       region: JSON.parse(data.get('region')),
-      image: savePath + newFileName,
+      image: savePath.substring(8) + newFileName,
       authorId: token.id,
     });
     // TODO return newRecipe id
