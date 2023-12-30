@@ -6,6 +6,7 @@ import Task from '@components/Task';
 import CommentList from '@components/CommentList';
 import { getRecipe } from '@utils/getRecipe';
 import getStars from '@utils/getStars';
+import AddComment from '@components/AddComment';
 
 export default async function Page({ params }) {
   const recipe = await getRecipe(params.id);
@@ -118,30 +119,7 @@ export default async function Page({ params }) {
         <div className='flex gap-3 text-6xl'>{stars}</div>
       </div>
 
-      <div className='flex items-center justify-between pb-8 pt-12'>
-        <label htmlFor='comment' className='font-secondary text-3xl'>
-          Napisz komentarz
-        </label>
-        <div>
-          <button className='text-w_orange underline hover:opacity-80'>
-            Zaloguj się
-          </button>{' '}
-          aby dodać komentarz
-        </div>
-      </div>
-      <div className='relative mb-24 h-80 w-full rounded-xl bg-gray-100'>
-        <div className='p-8'>
-          <textarea
-            id='comment'
-            rows='8'
-            className='w-full resize-none bg-gray-100 placeholder:text-gray-600'
-            placeholder='Napisz co sądzisz o tym przepisie.'
-          ></textarea>
-        </div>
-        <button className='absolute bottom-6 right-8 rounded-xl bg-w_orange p-3 text-white hover:opacity-80'>
-          Opublikuj komentarz
-        </button>
-      </div>
+      <AddComment recipeId={params.id} />
     </div>
   );
 }

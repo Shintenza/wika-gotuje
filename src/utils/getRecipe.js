@@ -4,9 +4,15 @@ import User from '@models/User';
 
 export const getRecipe = async (id) => {
   await connectDb();
-  const recipes = await Recipe.findById(id).populate({
-    path: 'authorId',
-    select: 'name image',
-  });
+  const recipes = await Recipe.findById(id)
+    .populate({
+      path: 'authorId',
+      select: 'name image',
+    })
+    .populate({
+      path: 'comments.authorId',
+      select: 'name image',
+    })
+    .lean();
   return recipes;
 };
