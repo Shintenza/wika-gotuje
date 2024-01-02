@@ -1,5 +1,6 @@
 import { connectDb } from '@utils/connectDb';
 import Recipe from '@models/Recipe';
+import { unstable_noStore as noStore } from 'next/cache';
 
 const PAGE_SIZE = 6;
 
@@ -14,16 +15,17 @@ export const getTotalPages = async () => {
 };
 
 export const getPaginatedRecipes = async (page) => {
+  noStore();
   try {
     const skip = (page - 1) * PAGE_SIZE;
     const recipies = await Recipe.find()
-      .sort({ dateAdded: -1 }) 
+      .sort({ dateAdded: -1 })
       .select('-diet -region -steps -ingredients -portionsNumber')
       .skip(skip)
       .limit(PAGE_SIZE)
       .populate({
         path: 'authorId',
-        select: 'name image'
+        select: 'name image',
       })
       .lean();
     return recipies;
