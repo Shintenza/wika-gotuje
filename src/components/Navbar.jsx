@@ -8,7 +8,7 @@ import { IoCloseSharp } from 'react-icons/io5';
 
 import styles from '@styles/Navbar.module.css';
 
-import wikagotuje_logo from '../../public/logo.svg';
+import wikagotuje_logo from '@../public/logo.svg';
 import { redirect, usePathname } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
