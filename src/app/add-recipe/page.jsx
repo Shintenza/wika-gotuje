@@ -10,6 +10,7 @@ import PageSpinner from '@components/PageSpinner';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import MultiSelectDropdown from '@components/MultiSelectDropdown';
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
   const { data: session } = useSession({
@@ -18,6 +19,8 @@ const Page = () => {
       redirect('/api/auth/signin?callbackUrl=/add-recipe');
     },
   });
+
+  const router = useRouter();
 
   const [isError, setIsError] = useState(false);
 
@@ -97,8 +100,8 @@ const Page = () => {
       body: data,
     });
     if (response.status == 200) {
-      // TODO make it complete
-      console.log('Kurwa jest w pytę');
+      const responseBody = await response.json();
+      router.replace(`/recipe/${responseBody.id}`, {scroll: false})
     }
   };
 
@@ -109,7 +112,7 @@ const Page = () => {
   return (
     <div className='page_padding'>
       <h1 className='section_header'>Dodaj przepis</h1>
-      <div className='add_recipe mb-10 grid grid-cols-1 sm:grid-rows-4 sm:grid-cols-4 sm:grid-rows-2 gap-x-4 gap-y-16'>
+      <div className='add_recipe mb-10 grid grid-cols-1 gap-x-4 gap-y-16 sm:grid-cols-4 sm:grid-rows-2 sm:grid-rows-4'>
         <div className='sm:col-span-2'>
           <label htmlFor='recipe_name'>Nazwa przepisu</label>
           <input
@@ -135,7 +138,7 @@ const Page = () => {
             setStateElem={setRecipeCategory}
           />
         </div>
-        <div className='sm:col-span-2 sm:col-start-3 row-span-3 sm:row-span-2 sm:row-start-1'>
+        <div className='row-span-3 sm:col-span-2 sm:col-start-3 sm:row-span-2 sm:row-start-1'>
           <label className='text-lg'>Wybierz zdjęcie</label>
           <input
             type='file'
@@ -194,7 +197,7 @@ const Page = () => {
       <h1 className='section_header'></h1>
       <h2 className='mb-4 text-2xl'>Dodatkowe informacje</h2>
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+      <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
         <FilterInput
           filterObj={filters['advancement_level']}
           stateElem={advancementLevel}

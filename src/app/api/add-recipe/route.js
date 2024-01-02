@@ -39,7 +39,7 @@ export const POST = async (req) => {
     const newFileName = generateUniqueImageName(imageFile.name);
     await writeFile(savePath + newFileName, buffer);
 
-    const newRecipe = await Recipe.create({
+    const newRecipe = new Recipe({
       name: data.get('name'),
       prepTime: parseInt(data.get('prepTime')),
       ingredientsAvailability: data.get('ingredientsAvailability'),
@@ -52,8 +52,8 @@ export const POST = async (req) => {
       image: savePath.substring(8) + newFileName,
       authorId: token.id,
     });
-    // TODO return newRecipe id
-    return new Response('ok', { status: 200 });
+    const savedRecipe = await newRecipe.save();
+    return new Response(JSON.stringify({message: "ok", id: savedRecipe.id}), { status: 200 });
   } catch (error) {
     console.log(error);
     return new Response(error, { status: 500 });

@@ -7,9 +7,15 @@ import CommentList from '@components/CommentList';
 import { getRecipe } from '@utils/getRecipe';
 import getStars from '@utils/getStars';
 import AddComment from '@components/AddComment';
+import { notFound } from 'next/navigation';
 
 export default async function Page({ params }) {
   const recipe = await getRecipe(params.id);
+
+  if (!recipe) {
+    notFound()
+  }
+
   const [avgRating, stars] = getStars(recipe.starReviews);
   const formatter = new Intl.DateTimeFormat('pl-PL', {
     day: '2-digit',
