@@ -4,7 +4,7 @@ import { PiPrinterLight } from 'react-icons/pi';
 import { BiCommentDetail } from 'react-icons/bi';
 import Task from '@components/Task';
 import CommentList from '@components/CommentList';
-import { getRecipe } from '@utils/getRecipe';
+import { getRecipe } from '@utils/getRecipes';
 import getStars from '@utils/getStars';
 import AddComment from '@components/AddComment';
 import { notFound } from 'next/navigation';

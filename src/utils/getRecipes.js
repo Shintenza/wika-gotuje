@@ -3,14 +3,6 @@ import Recipe from '@models/Recipe';
 
 const PAGE_SIZE = 6;
 
-export const getRecipes = async () => {
-  await connectDb();
-  const recipes = (await Recipe.find({}).select('id')).map((recipe) => {
-    return recipe.id;
-  });
-  return recipes;
-};
-
 export const getTotalPages = async () => {
   await connectDb();
   try {
@@ -25,6 +17,7 @@ export const getPaginatedRecipes = async (page) => {
   try {
     const skip = (page - 1) * PAGE_SIZE;
     const recipies = await Recipe.find()
+      .sort({ dateAdded: -1 }) 
       .select('-diet -region -steps -ingredients -portionsNumber')
       .skip(skip)
       .limit(PAGE_SIZE)
@@ -36,5 +29,24 @@ export const getPaginatedRecipes = async (page) => {
     return recipies;
   } catch (error) {
     throw new Error('failed to fetch paginated recipies');
+  }
+};
+
+export const getRecipe = async (id) => {
+  await connectDb();
+  try {
+    const recipe = await Recipe.findById(id)
+      .populate({
+        path: 'authorId',
+        select: 'name image',
+      })
+      .populate({
+        path: 'comments.authorId',
+        select: 'name image',
+      })
+      .lean();
+    return recipe;
+  } catch (error) {
+    return null;
   }
 };
