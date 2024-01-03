@@ -7,7 +7,12 @@ import { useRef } from 'react';
 import Comment from './Comment';
 import RatingStars from './RatingStars';
 
-const CommentList = ({ comments: commentsInitial, reviews, recipeId }) => {
+const CommentList = ({
+  comments: commentsInitial,
+  avgRating,
+  reviewCount,
+  recipeId,
+}) => {
   const { status } = useSession();
   const [loadedCount, setLoadedCount] = useState(
     Math.min(3, commentsInitial.length),
@@ -89,7 +94,11 @@ const CommentList = ({ comments: commentsInitial, reviews, recipeId }) => {
       {returnCommentList()}
       {returnButton()}
 
-      <RatingStars reviews={reviews} recipeId={recipeId} />
+      <RatingStars
+        avgRating={avgRating}
+        reviewCount={reviewCount}
+        recipeId={recipeId}
+      />
 
       <div className='flex items-center justify-between pb-8 pt-12'>
         <label htmlFor='comment' className='font-secondary text-3xl'>

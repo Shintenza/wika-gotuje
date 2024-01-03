@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { FaFire, FaRegCalendarAlt, FaRegClock } from 'react-icons/fa';
 import { BiCommentDetail } from 'react-icons/bi';
-import getStars from '@utils/getStars';
+import getStars, { calcAvgRating } from '@utils/getStars';
 import RecipeLikeButton from '@components/RecipeLikeButton';
 
 const RecipeCard = async ({ recipeDetails }) => {
@@ -18,7 +18,7 @@ const RecipeCard = async ({ recipeDetails }) => {
     authorId: author,
     prepTime,
   } = recipeDetails;
-  const [_avgRating, stars] = getStars(starReviews);
+  const stars = getStars(calcAvgRating(starReviews));
   const formatter = new Intl.DateTimeFormat('pl-PL', {
     day: '2-digit',
     month: '2-digit',

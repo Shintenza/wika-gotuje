@@ -6,6 +6,7 @@ import Task from '@components/Task';
 import CommentList from '@components/CommentList';
 import { getRecipe } from '@utils/getRecipes';
 import { notFound } from 'next/navigation';
+import { calcAvgRating } from '@utils/getStars';
 
 export default async function Page({ params }) {
   const recipe = await getRecipe(params.id);
@@ -118,7 +119,8 @@ export default async function Page({ params }) {
 
       <CommentList
         comments={recipe.comments}
-        reviews={recipe.starReviews}
+        avgRating={calcAvgRating(recipe.starReviews)}
+        reviewCount={recipe.starReviews.length}
         recipeId={params.id}
       />
     </div>
