@@ -68,7 +68,11 @@ export default async function Page({ params }) {
             <p className='text-gray-500'>Porcje</p>
             <p>
               {recipe.portionsNumber}{' '}
-              {recipe.portionsNumber > 1 ? 'osoby' : 'osoba'}
+              {recipe.portionsNumber > 1
+                ? recipe.portionsNumber > 4
+                  ? 'osób'
+                  : 'osoby'
+                : 'osoba'}
             </p>
           </div>
           <div className='py-4 text-center sm:px-8 sm:py-0'>
