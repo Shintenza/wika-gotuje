@@ -5,18 +5,15 @@ import { BiCommentDetail } from 'react-icons/bi';
 import Task from '@components/Task';
 import CommentList from '@components/CommentList';
 import { getRecipe } from '@utils/getRecipes';
-import getStars from '@utils/getStars';
-import AddComment from '@components/AddComment';
 import { notFound } from 'next/navigation';
 
 export default async function Page({ params }) {
   const recipe = await getRecipe(params.id);
 
   if (!recipe) {
-    notFound()
+    notFound();
   }
 
-  const [avgRating, stars] = getStars(recipe.starReviews);
   const formatter = new Intl.DateTimeFormat('pl-PL', {
     day: '2-digit',
     month: '2-digit',
@@ -115,17 +112,11 @@ export default async function Page({ params }) {
         Podziel się wrażeniami
       </button>
 
-      <CommentList comments={recipe.comments} />
-
-      <h2 className='pb-4 pt-12 font-secondary text-3xl'>Oceń przepis</h2>
-      <div className='flex flex-wrap items-center'>
-        <div className='pr-10 text-xl'>
-          Średnia {avgRating}/5 ({recipe.starReviews.length} głosów)
-        </div>
-        <div className='flex gap-3 text-6xl'>{stars}</div>
-      </div>
-
-      <AddComment recipeId={params.id} />
+      <CommentList
+        comments={recipe.comments}
+        reviews={recipe.starReviews}
+        recipeId={params.id}
+      />
     </div>
   );
 }

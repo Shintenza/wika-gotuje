@@ -18,11 +18,22 @@ export const POST = async (req) => {
       commentDateAdded: Date.now(),
       content: data.get('comment'),
     };
-    await Recipe.updateOne(
-      { id: data.get('recipeId') },
-      { $push: { comments: newComment } },
-    );
-    return new Response('ok', { status: 200 });
+    const result = await Recipe.findOneAndUpdate(
+      { _id: data.get('recipeId') },
+      {
+        $push: {
+          comments: {
+            $each: [newComment],
+            $sort: { commentDateAdded: -1 },
+          },
+        },
+      },
+      { new: true, fields: 'comments' },
+    ).populate({
+      path: 'comments.authorId',
+      select: 'name image',
+    });
+    return new Response(JSON.stringify(result.comments[0]), { status: 200 });
   } catch (error) {
     console.log(error);
     return new Response(error, { status: 500 });
