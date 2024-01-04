@@ -5,6 +5,7 @@ import { FaFire, FaRegCalendarAlt, FaRegClock } from 'react-icons/fa';
 import { BiCommentDetail } from 'react-icons/bi';
 import getStars, { calcAvgRating } from '@utils/getStars';
 import RecipeLikeButton from '@components/RecipeLikeButton';
+import { getToken } from 'next-auth/jwt';
 
 const RecipeCard = async ({ recipeDetails }) => {
   const {
@@ -27,7 +28,7 @@ const RecipeCard = async ({ recipeDetails }) => {
 
   return (
     <div className='relative flex w-full flex-col rounded-lg bg-w_gray'>
-      <RecipeLikeButton />
+      <RecipeLikeButton recipeId={_id.toString()}/>
       <Link href={`recipe/${_id}`}>
         <div className=' relative min-h-[227px] w-full '>
           <Image

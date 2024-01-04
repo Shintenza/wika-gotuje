@@ -17,9 +17,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  likedRecipies: [
+  likedRecipes: [
     {
-      recipeId: { type: Schema.Types.ObjectId, ref: 'Recipe', required: true },
+      type: Schema.Types.ObjectId,
+      ref: 'Recipe',
+      required: true,
     },
   ],
   subscribes: [
