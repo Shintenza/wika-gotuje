@@ -6,8 +6,6 @@ export const GET = async (req) => {
   const userId = req.nextUrl.searchParams.get('userId');
   const recipeId = req.nextUrl.searchParams.get('recipeId');
 
-  console.log(userId, recipeId);
-
   if (!userId || !recipeId)
     return new Response('missing userId or recipeId query params', {
       status: 400,

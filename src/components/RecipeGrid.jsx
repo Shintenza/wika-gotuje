@@ -1,14 +1,12 @@
 import RecipeCard from '@components/RecipeCard';
-import { getPaginatedRecipes } from '@utils/getRecipes';
 
-const RecipeGrid = async ({ sectionTitle, recipes, pageNumber }) => {
-  const fetchedRecipies = await getPaginatedRecipes(pageNumber);
+const RecipeGrid = async ({ recipes, clickHandle }) => {
 
   return (
     <div className='page_padding'>
       <div className='grid w-full  grid-cols-1 gap-1  sm:grid-cols-2 lg:grid-cols-3'>
-        {fetchedRecipies.map((recipe, index)=>(
-          <RecipeCard recipeDetails={recipe} key={index}/>
+        {recipes.map((recipe, index)=>(
+          <RecipeCard recipeDetails={recipe} clickHandle={clickHandle} key={index}/>
         ))}
       </div>
     </div>

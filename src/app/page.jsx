@@ -1,14 +1,19 @@
 import Pagination from '@components/Pagination';
 import RecipeGrid from '@components/RecipeGrid';
-import { getRecipes, getTotalPages } from '@utils/getRecipes';
+import { getTotalPages } from '@utils/getRecipes';
+import { getPaginatedRecipes } from '@utils/getRecipes';
+
 const Page = async ({searchParams}) => {
+  
   const totalNumberOfPages = await getTotalPages()
   const currentPage = Number(searchParams.page) || 1;
+
+  const fetchedRecipies = await getPaginatedRecipes(currentPage);
 
   return (
     <main>
       <h1 className='page_padding mb-8 font-secondary text-2xl font-bold'>Ostatnio dodane</h1>
-      <RecipeGrid pageNumber={currentPage}/>
+      <RecipeGrid recipes={fetchedRecipies}/>
       <Pagination totalPages={totalNumberOfPages}/>
     </main>
   );

@@ -5,9 +5,8 @@ import { FaFire, FaRegCalendarAlt, FaRegClock } from 'react-icons/fa';
 import { BiCommentDetail } from 'react-icons/bi';
 import getStars, { calcAvgRating } from '@utils/getStars';
 import RecipeLikeButton from '@components/RecipeLikeButton';
-import { getToken } from 'next-auth/jwt';
 
-const RecipeCard = async ({ recipeDetails }) => {
+const RecipeCard = async ({ recipeDetails, clickHandle }) => {
   const {
     _id,
     name,
@@ -28,7 +27,7 @@ const RecipeCard = async ({ recipeDetails }) => {
 
   return (
     <div className='relative flex w-full flex-col rounded-lg bg-w_gray'>
-      <RecipeLikeButton recipeId={_id.toString()}/>
+      <RecipeLikeButton recipeId={_id.toString()} clickHandle={clickHandle} />
       <Link href={`recipe/${_id}`}>
         <div className=' relative min-h-[227px] w-full '>
           <Image
@@ -69,7 +68,11 @@ const RecipeCard = async ({ recipeDetails }) => {
               <p className='inline-block pr-1'>
                 <FaRegCalendarAlt className='inline-block' />{' '}
                 <span className='font-light'>
-                  {formatter.format(dateAdded)}
+                  {formatter.format(
+                    typeof dateAdded == 'string'
+                      ? new Date(dateAdded)
+                      : dateAdded,
+                  )}
                 </span>
               </p>
               <p className='inline-block'>
