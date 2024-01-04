@@ -1,5 +1,6 @@
 import { connectDb } from '@utils/connectDb';
 import Recipe from '@models/Recipe';
+import User from '@models/User'
 import { unstable_noStore as noStore } from 'next/cache';
 
 const PAGE_SIZE = 6;
@@ -26,6 +27,7 @@ export const getPaginatedRecipes = async (page) => {
       .populate({
         path: 'authorId',
         select: 'name image',
+        model: User
       })
       .lean();
     return recipies;
