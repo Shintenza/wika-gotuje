@@ -10,51 +10,22 @@ export function calcAvgRating(reviews) {
 
 export default function getStars(rating, callback = null) {
   const stars = [];
-  let starIndex = 0;
 
-  let decimalPart = rating - Math.floor(rating);
-
-  if (decimalPart <= 0.25) decimalPart = 0;
-  else if (decimalPart >= 0.75) decimalPart = 1;
-  else decimalPart = 0.5;
-
-  for (let i = 0; i < Math.floor(rating + decimalPart); i++) {
-    stars.push(
-      <MdStar
-        color='#FF8051'
-        key={starIndex}
-        index={starIndex}
-        onClick={callback}
-      />,
-    );
-    starIndex++;
-  }
-
-  if (decimalPart === 0.5) {
-    stars.push(
-      <MdStarHalf
-        color='#FF8051'
-        key={starIndex}
-        index={starIndex}
-        onClick={callback}
-      />,
-    );
-    starIndex++;
-  }
-
-  const starsLeft =
-    5 - (Math.floor(rating + decimalPart) + (decimalPart === 0.5 ? 1 : 0));
-
-  for (let i = 0; i < starsLeft; i++) {
-    stars.push(
-      <MdStarBorder
-        color='#FF8051'
-        key={starIndex}
-        index={starIndex}
-        onClick={callback}
-      />,
-    );
-    starIndex++;
+  for (let i = 0; i < 5; i++) {
+    if (rating >= 0.75) {
+      stars.push(
+        <MdStar color='#FF8051' key={i} index={i} onClick={callback} />,
+      );
+    } else if (rating >= 0.25) {
+      stars.push(
+        <MdStarHalf color='#FF8051' key={i} index={i} onClick={callback} />,
+      );
+    } else {
+      stars.push(
+        <MdStarBorder color='#FF8051' key={i} index={i} onClick={callback} />,
+      );
+    }
+    rating--;
   }
 
   return stars;
