@@ -4,6 +4,7 @@ import { PiPrinterLight } from 'react-icons/pi';
 import { BiCommentDetail } from 'react-icons/bi';
 import Task from '@components/Task';
 import CommentList from '@components/CommentList';
+import FollowButton from '@components/FollowButton';
 import { getRecipe } from '@utils/getRecipes';
 import { notFound } from 'next/navigation';
 import { calcAvgRating } from '@utils/getStars';
@@ -35,9 +36,7 @@ export default async function Page({ params }) {
           />
         </div>
         <p className='text-lg'>{recipe.authorId.name}</p>
-        <button className='rounded-lg bg-w_orange px-5 py-1 text-white hover:opacity-80'>
-          Obserwuj
-        </button>
+        <FollowButton userId={recipe.authorId._id} />
         <div>
           <p className='inline-block pr-3'>
             <FaRegCalendarAlt className='inline-block text-lg' /> {}

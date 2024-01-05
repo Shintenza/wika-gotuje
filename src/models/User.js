@@ -24,9 +24,11 @@ const userSchema = new Schema({
       required: true,
     },
   ],
-  subscribes: [
+  follows: [
     {
-      authorId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
     },
   ],
 });

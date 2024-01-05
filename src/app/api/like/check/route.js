@@ -26,7 +26,7 @@ export const GET = async (req) => {
       return new Response(JSON.stringify({ liked: false }), { status: 200 });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return new Response('server error while fetching isLiked', { status: 500 });
   }
 };
