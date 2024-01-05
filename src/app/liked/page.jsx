@@ -16,39 +16,40 @@ const Page = ({ searchParams }) => {
   };
 
   useEffect(() => {
-    const fetchLikedRecipes = async () => {
+    async function fetchRecipes() {
       try {
-        const response = await fetch(`/api/like?page=${currentPage}`);
+        const response = await fetch(
+          `/api/${
+            viewMode === 'liked' ? 'like' : 'follows'
+          }?page=${currentPage}`,
+        );
         if (response.status == 200) {
           const fetchedRecipes = await response.json();
-          if (fetchedRecipes.recipes.length == 0) return;
           setRecipes(fetchedRecipes.recipes);
           setTotalNumberOfPages(fetchedRecipes.totalNumber);
         } else {
-          return [];
+          setRecipes([]);
         }
-      } catch (error) { }
-    };
-    if (viewMode == 'liked') {
-      fetchLikedRecipes();
-    } else {
-      setRecipes([]);
+      } catch (error) {}
     }
+    fetchRecipes();
   }, [viewMode, currentPage]);
 
   return (
     <>
       <div className='page_padding relative mb-5'>
         <button
-          className={`switch_button ${viewMode == 'liked' ? 'switch_button_active' : ''
-            }`}
+          className={`switch_button ${
+            viewMode == 'liked' ? 'switch_button_active' : ''
+          }`}
           onClick={() => setViewMode('liked')}
         >
           Polubione
         </button>
         <button
-          className={`switch_button ${viewMode == 'subscribed' ? 'switch_button_active' : ''
-            }`}
+          className={`switch_button ${
+            viewMode == 'subscribed' ? 'switch_button_active' : ''
+          }`}
           onClick={() => setViewMode('subscribed')}
         >
           Obserwowane
@@ -58,7 +59,7 @@ const Page = ({ searchParams }) => {
         <RecipeGrid recipes={recipes} clickHandle={handleDeleteRecipe} />
       ) : (
         <p className='mt-12 text-center text-2xl text-gray-500 '>
-          Trochę tu pusto 
+          Trochę tu pusto
         </p>
       )}
 
