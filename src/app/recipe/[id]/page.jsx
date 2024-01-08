@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import { FaRegCalendarAlt } from 'react-icons/fa';
-import { PiPrinterLight } from 'react-icons/pi';
 import { BiCommentDetail } from 'react-icons/bi';
 import Task from '@components/Task';
 import CommentList from '@components/CommentList';
@@ -8,6 +7,8 @@ import FollowButton from '@components/FollowButton';
 import { getRecipe } from '@utils/getRecipes';
 import { notFound } from 'next/navigation';
 import { calcAvgRating } from '@utils/getStars';
+import PrintRecipe from '@components/PrintRecipe';
+import "@styles/recipe.css"
 
 export default async function Page({ params }) {
   const recipe = await getRecipe(params.id);
@@ -23,10 +24,10 @@ export default async function Page({ params }) {
   });
 
   return (
-    <div className='page_padding'>
+    <div className='page_padding recipe_wrapper'>
       <h1 className='py-[35px] font-secondary text-4xl'>{recipe.name}</h1>
 
-      <div className='flex flex-wrap items-center gap-6 text-sm'>
+      <div className='flex flex-wrap items-center gap-6 text-sm print_hide'>
         <div className='relative h-[44px] w-[44px]'>
           <Image
             src={recipe.authorId.image}
@@ -35,7 +36,7 @@ export default async function Page({ params }) {
             alt={recipe.authorId.name}
           />
         </div>
-        <p className='text-lg'>{recipe.authorId.name}</p>
+        <p className='text-lg print_hide'>{recipe.authorId.name}</p>
         <FollowButton userId={recipe.authorId._id} />
         <div>
           <p className='inline-block pr-3'>
@@ -58,7 +59,7 @@ export default async function Page({ params }) {
         />
       </div>
 
-      <div className='flex flex-col justify-between gap-8 py-16 md:flex-row'>
+      <div className='flex flex-col justify-between gap-8 py-16 md:flex-row recipe_details'>
         <div className='flex flex-col divide-y divide-black font-light uppercase sm:flex-row sm:divide-x sm:divide-y-0'>
           <div className='pb-4 text-center sm:py-0 sm:pr-8'>
             <p className='text-gray-500'>Czas</p>
@@ -85,12 +86,7 @@ export default async function Page({ params }) {
           </div>
         </div>
 
-        <button>
-          <p className='inline-block'>
-            Wydrukuj przepis
-            <PiPrinterLight className='ml-5 inline-block text-5xl' />
-          </p>
-        </button>
+        <PrintRecipe name={recipe.name} ingredients={recipe.ingredients} steps={recipe.steps}/>
       </div>
 
       <div className='flex flex-col gap-5 pb-4 md:flex-row'>

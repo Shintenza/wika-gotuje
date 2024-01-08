@@ -1,0 +1,33 @@
+@media print {
+  body * {
+    display: none !important;
+  }
+
+  body,
+  .recipe_wrapper,
+  .recipe_details,
+  #print_content,
+  #print_content * {
+    display: block !important;
+  }
+
+  #print_content {
+    display: flex !important;
+    flex-direction: column;
+  }
+
+  #print_content h1 {
+    @apply mb-4 text-4xl font-bold;
+  }
+
+  #print_content h2 {
+    @apply mb-2 text-2xl font-bold;
+  }
+
+  #print_content ul {
+    @apply mb-4;
+  }
+  #print_content li::before {
+    content: "- ";
+  }
+}
