@@ -4,8 +4,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaFacebook, FaGithub, FaGoogle } from 'react-icons/fa';
 import wikagotuje_logo from '@../public/logo.svg';
+import { useSearchParams } from 'next/navigation';
 
 const LoginForm = ({ providers }) => {
+  const searchParams = useSearchParams();
+  const callback = searchParams.get('callbackUrl') || '';
+
   const providerDetails = (provider) => {
     if (provider.name == 'Facebook') {
       return {
@@ -40,7 +44,9 @@ const LoginForm = ({ providers }) => {
             className='font-logo mx-auto w-1/2 object-contain'
           />
         </Link>
-        <p className='py-3'>Aby się zalogować wybierz jedną z poniższych metod</p>
+        <p className='py-3'>
+          Aby się zalogować wybierz jedną z poniższych metod
+        </p>
         {Object.values(providers).map((provider) => (
           <div key={provider.name} className='w-4/5 p-2'>
             <button
@@ -48,10 +54,16 @@ const LoginForm = ({ providers }) => {
                 backgroundColor: providerDetails(provider).bgColor,
                 color: providerDetails(provider).fgColor,
               }}
-              onClick={() => signIn(provider.id)}
-              className='w-full p-3 rounded-lg flex justify-center shadow-md'
+              onClick={() =>
+                signIn(provider.id, {
+                  callbackUrl: callback.length > 0 ? callback : '/',
+                })
+              }
+              className='flex w-full justify-center rounded-lg p-3 shadow-md'
             >
-              <span className='my-auto inline-block text-2xl mr-2'>{providerDetails(provider).icon}</span>
+              <span className='my-auto mr-2 inline-block text-2xl'>
+                {providerDetails(provider).icon}
+              </span>
               <span className='my-auto'>{provider.name}</span>
             </button>
           </div>

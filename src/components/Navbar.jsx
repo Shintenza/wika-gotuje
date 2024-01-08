@@ -15,7 +15,7 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 const Navbar = () => {
   const pathname = usePathname();
 
-  const [nav, setNav] = useState(false);
+  const [open, isOpen] = useState(false);
   const { data: session, status } = useSession();
 
   const navigationElements = [
@@ -23,6 +23,7 @@ const Navbar = () => {
       className={`${pathname === '/' ? styles.active : ''}`}
       href='/'
       key={0}
+      onClick={()=> isOpen(false)}
     >
       Strona główna
     </Link>,
@@ -30,6 +31,7 @@ const Navbar = () => {
       className={`${pathname === '/find-recipe' ? styles.active : ''}`}
       href='/find-recipe'
       key={1}
+      onClick={()=> isOpen(false)}
     >
       Znajdź przepis
     </Link>,
@@ -37,6 +39,7 @@ const Navbar = () => {
       className={`${pathname === '/add-recipe' ? styles.active : ''}`}
       href='/add-recipe'
       key={2}
+      onClick={()=> isOpen(false)}
     >
       Dodaj przepis
     </Link>,
@@ -44,6 +47,7 @@ const Navbar = () => {
       className={`${pathname === '/liked' ? styles.active : ''}`}
       href='/liked'
       key={3}
+      onClick={()=> isOpen(false)}
     >
       Polubione
     </Link>,
@@ -98,14 +102,14 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className='mr-4 md:hidden' onClick={() => setNav(!nav)}>
-        {!nav ? <MenuIcon className='w-5' /> : <XIcon className='w-5' />}
+      <div className='mr-4 md:hidden' onClick={() => isOpen(!open)}>
+        {!open ? <MenuIcon className='w-5' /> : <XIcon className='w-5' />}
       </div>
 
-      <ul className={!nav ? 'hidden' : styles.navbar_mobile}>
+      <ul className={!open ? 'hidden' : styles.navbar_mobile}>
         <IoCloseSharp
           className='z-100 self-end text-3xl'
-          onClick={() => setNav(!nav)}
+          onClick={() => isOpen(!open)}
         />
         {navigationElements.map((e) => e)}
         <div className='my-4 flex flex-col'>
