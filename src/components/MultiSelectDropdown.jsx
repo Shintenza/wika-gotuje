@@ -4,7 +4,7 @@ import { MdArrowDropDown } from 'react-icons/md';
 import { FaCheck } from 'react-icons/fa6';
 import '@styles/MultiSelectDropdown.module.css';
 
-const MultiSelectDropdown = ({ inputName, options, setOptions }) => {
+const MultiSelectDropdown = ({ inputName, options, setOptions, name }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const dropdownRef = useRef(null);
@@ -45,7 +45,7 @@ const MultiSelectDropdown = ({ inputName, options, setOptions }) => {
 
   return (
     <div className='select-none relative' ref={dropdownRef}>
-      <label className='text-lg'>{inputName}</label>
+      <label className='text-lg'>{name}</label>
       <div
         className='mt-3 flex items-center justify-between rounded-lg bg-w_gray p-3'
         onClick={() => setIsOpen(!isOpen)}
@@ -60,7 +60,7 @@ const MultiSelectDropdown = ({ inputName, options, setOptions }) => {
 
       <ul
         ref={dropdownRef}
-        className={`${!isOpen && 'hidden'} mt-1 rounded-lg bg-w_gray absolute w-full shadow-md`}
+        className={`${!isOpen && 'hidden'} mt-1 rounded-lg bg-w_gray absolute w-full shadow-md z-10`}
       >
         {options.map((option, count) => (
           <li

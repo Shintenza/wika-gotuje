@@ -10,7 +10,7 @@
 }
 
 .add_img_btn {
-  @apply w-full h-full bg-w_gray rounded-lg relative;
+  @apply w-full h-full bg-w_gray rounded-lg relative mt-3;
 }
 
 .add_img_btn svg {
@@ -19,7 +19,7 @@
 }
 
 .add_img_btn img {
-  @apply rounded-lg object-center object-contain;
+  @apply rounded-lg object-cover object-contain;
 }
 
 .error_msg {

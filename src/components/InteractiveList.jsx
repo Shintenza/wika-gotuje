@@ -8,9 +8,9 @@ import ListElement from './ListElement';
 const InteractiveList = ({ listTitle, placeholder, mainArray }) => {
   const [listElements, setListElements] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     mainArray.current = listElements;
-  }, [listElements])
+  }, [listElements]);
 
   const handleAddElement = (element) => {
     if (element.length <= 5) return;
@@ -30,7 +30,7 @@ const InteractiveList = ({ listTitle, placeholder, mainArray }) => {
 
   return (
     <>
-      <h2 className='text-2xl mb-4 mt-4'>{listTitle}</h2>
+      <h2 className='mb-4 mt-4 text-2xl'>{listTitle}</h2>
 
       <ul className='list-disc'>
         {listElements.map((ingredient, index) => {
@@ -45,7 +45,7 @@ const InteractiveList = ({ listTitle, placeholder, mainArray }) => {
           );
         })}
       </ul>
-      <ListInput handleAdd={handleAddElement} placeholder={placeholder}/>
+      <ListInput handleAdd={handleAddElement} placeholder={placeholder} />
     </>
   );
 };

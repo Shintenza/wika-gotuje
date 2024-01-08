@@ -101,7 +101,7 @@ const Page = () => {
     });
     if (response.status == 200) {
       const responseBody = await response.json();
-      router.replace(`/recipe/${responseBody.id}`, {scroll: false})
+      router.replace(`/recipe/${responseBody.id}`, { scroll: false });
     }
   };
 
@@ -112,8 +112,8 @@ const Page = () => {
   return (
     <div className='page_padding'>
       <h1 className='section_header'>Dodaj przepis</h1>
-      <div className='add_recipe mb-10 grid grid-cols-1 gap-x-4 gap-y-16 sm:grid-cols-4 sm:grid-rows-2 sm:grid-rows-4'>
-        <div className='sm:col-span-2'>
+      <div className='add_recipe mb-10 grid grid-cols-1 gap-x-4 gap-y-16 sm:grid-cols-2 sm:grid-rows-3 '>
+        <div className=''>
           <label htmlFor='recipe_name'>Nazwa przepisu</label>
           <input
             value={recipeName}
@@ -131,14 +131,14 @@ const Page = () => {
           )}
         </div>
 
-        <div className='sm:col-span-2'>
+        <div className='sm:row-start-2 sm:row-span-1'>
           <FilterInput
             filterObj={filters['recipe_category']}
             stateElem={recipeCategory}
             setStateElem={setRecipeCategory}
           />
         </div>
-        <div className='row-span-3 sm:col-span-2 sm:col-start-3 sm:row-span-2 sm:row-start-1'>
+        <div className='row-span-6 sm:row-span-3'>
           <label className='text-lg'>Wybierz zdjęcie</label>
           <input
             type='file'
@@ -210,12 +210,6 @@ const Page = () => {
           setStateElem={setIngredientsAval}
         />
 
-        <MultiSelectDropdown
-          options={filters['diet_type'].availableOptions}
-          inputName={filters['diet_type'].filterDisplayName}
-          setOptions={setDietType}
-        />
-
         <div>
           <label className='text-lg'>Czas przygotowania (w min)</label>
           <input
@@ -230,12 +224,6 @@ const Page = () => {
             </p>
           )}
         </div>
-
-        <MultiSelectDropdown
-          options={filters['region'].availableOptions}
-          inputName={filters['region'].filterDisplayName}
-          setOptions={setRegion}
-        />
 
         <div>
           <label className='text-lg'>Liczba porcji</label>
@@ -254,6 +242,20 @@ const Page = () => {
             </p>
           )}
         </div>
+
+        <MultiSelectDropdown
+          name = "Rodzaj diety (opcjonalne)"
+          options={filters['diet_type'].availableOptions}
+          inputName={filters['diet_type'].filterDisplayName}
+          setOptions={setDietType}
+        />
+
+        <MultiSelectDropdown
+          name = "Region pochodzenia (opcjonalne)"
+          options={filters['region'].availableOptions}
+          inputName={filters['region'].filterDisplayName}
+          setOptions={setRegion}
+        />
       </div>
       <button
         className='mt-10 w-full rounded-lg bg-black p-3 text-white'
