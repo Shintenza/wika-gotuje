@@ -14,14 +14,14 @@ const PrintRecipe = ({ name, ingredients, steps }) => {
         <h1>{name}</h1>
         <h2>Składniki</h2>
         <ul>
-          {ingredients.map((ingredient) => (
-            <li>{ingredient}</li>
+          {ingredients.map((ingredient, index) => (
+            <li key={index}>{ingredient}</li>
           ))}
         </ul>
         <h2>Przygotowanie</h2>
         <ul>
-          {steps.map((step) => (
-            <li>{step}</li>
+          {steps.map((step, index) => (
+            <li key={index}>{step}</li>
           ))}
         </ul>
       </div>
