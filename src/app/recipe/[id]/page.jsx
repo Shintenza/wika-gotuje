@@ -8,7 +8,7 @@ import { getRecipe } from '@utils/getRecipes';
 import { notFound } from 'next/navigation';
 import { calcAvgRating } from '@utils/getStars';
 import PrintRecipe from '@components/PrintRecipe';
-import "@styles/recipe.css"
+import '@styles/recipe.css';
 
 export default async function Page({ params }) {
   const recipe = await getRecipe(params.id);
@@ -27,7 +27,7 @@ export default async function Page({ params }) {
     <div className='page_padding recipe_wrapper'>
       <h1 className='py-[35px] font-secondary text-4xl'>{recipe.name}</h1>
 
-      <div className='flex flex-wrap items-center gap-6 text-sm print_hide'>
+      <div className='print_hide flex flex-wrap items-center gap-6 text-sm'>
         <div className='relative h-[44px] w-[44px]'>
           <Image
             src={recipe.authorId.image}
@@ -36,7 +36,7 @@ export default async function Page({ params }) {
             alt={recipe.authorId.name}
           />
         </div>
-        <p className='text-lg print_hide'>{recipe.authorId.name}</p>
+        <p className='print_hide text-lg'>{recipe.authorId.name}</p>
         <FollowButton userId={recipe.authorId._id} />
         <div>
           <p className='inline-block pr-3'>
@@ -52,14 +52,14 @@ export default async function Page({ params }) {
 
       <div className='relative mt-10 h-[600px] w-full overflow-hidden'>
         <Image
-          src={recipe.image}
+          src={process.env.CDN_URL + recipe.image}
           fill
           className='rounded-xl object-cover'
           alt={recipe.name}
         />
       </div>
 
-      <div className='flex flex-col justify-between gap-8 py-16 md:flex-row recipe_details'>
+      <div className='recipe_details flex flex-col justify-between gap-8 py-16 md:flex-row'>
         <div className='flex flex-col divide-y divide-black font-light uppercase sm:flex-row sm:divide-x sm:divide-y-0'>
           <div className='pb-4 text-center sm:py-0 sm:pr-8'>
             <p className='text-gray-500'>Czas</p>
@@ -86,7 +86,11 @@ export default async function Page({ params }) {
           </div>
         </div>
 
-        <PrintRecipe name={recipe.name} ingredients={recipe.ingredients} steps={recipe.steps}/>
+        <PrintRecipe
+          name={recipe.name}
+          ingredients={recipe.ingredients}
+          steps={recipe.steps}
+        />
       </div>
 
       <div className='flex flex-col gap-5 pb-4 md:flex-row'>
