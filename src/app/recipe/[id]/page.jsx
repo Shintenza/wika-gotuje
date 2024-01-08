@@ -52,7 +52,7 @@ export default async function Page({ params }) {
 
       <div className='relative mt-10 h-[600px] w-full overflow-hidden'>
         <Image
-          src={process.env.CDN_URL + recipe.image}
+          src={process.env.NEXT_PUBLIC_CDN_URL + recipe.image}
           fill
           className='rounded-xl object-cover'
           alt={recipe.name}

@@ -31,7 +31,7 @@ const RecipeCard = async ({ recipeDetails, clickHandle }) => {
       <Link scroll={false} href={`recipe/${_id}`}>
         <div className=' relative min-h-[227px] w-full '>
           <Image
-            src={process.env.CDN_URL + recipeImage}
+            src={process.env.NEXT_PUBLIC_CDN_URL + recipeImage}
             fill
             alt='food image'
             className='rounded-t-lg object-cover'
