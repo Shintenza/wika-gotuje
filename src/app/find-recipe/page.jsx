@@ -1,170 +1,62 @@
-'use client';
-
+import Pagination from '@components/Pagination';
+import RecipeGrid from '@components/RecipeGrid';
+import FindFilters from '@components/FindFilters';
+import { getTotalPages } from '@utils/getRecipes';
+import { getPaginatedRecipes } from '@utils/getRecipes';
 import '@styles/add-recipe.css';
-import { useEffect, useRef, useState } from 'react';
-import FilterInput from '@components/FilterInput';
-import PageSpinner from '@components/PageSpinner';
-import MultiSelectDropdown from '@components/MultiSelectDropdown';
-import { useRouter } from 'next/navigation';
 
-const Page = () => {
+const Page = async ({ searchParams }) => {
+  const {
+    name,
+    recipe_category,
+    ingredients_availability,
+    diet_type,
+    region,
+    advancement_level,
+    minPrepTime,
+    maxPrepTime,
+  } = searchParams;
 
-  const router = useRouter();
+  const filter = {};
 
-  const [isError, setIsError] = useState(false);
-
-  const [recipeName, setRecipeName] = useState('');
-  const [recipeImage, setRecipeImage] = useState(null);
-  const [filters, setFilters] = useState(null);
-
-  const [recipeCategory, setRecipeCategory] = useState('');
-  const [ingredientsAval, setIngredientsAval] = useState('');
-  const [dietType, setDietType] = useState([]);
-  const [region, setRegion] = useState([]);
-  const [advancementLevel, setAdvancementLevel] = useState('');
-  const [prepTime, setPrepTime] = useState(0);
-  const [portionsNumber, setPortionsNumber] = useState(1);
-
-  const recipeIngredients = useRef([]);
-  const recipeSteps = useRef([]);
-
-  const imageInputRef = useRef(null);
-
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files && e.target.files[0];
-    if (!selectedFile) return;
-
-    e.target.value = null;
-    setRecipeImage(selectedFile);
-  };
-
-  useEffect(() => {
-    const getFilters = async () => {
-      const fetchedFilters = await fetch('/api/filters');
-      const parsedFilters = await fetchedFilters.json();
-
-      const filtersDict = {};
-
-      parsedFilters.forEach((item) => {
-        const { filterName, _id, ...rest } = item;
-        filtersDict[item.filterName] = rest;
-      });
-
-      setFilters(filtersDict);
+  if (name) filter['$text'] = { $search: name };
+  if (advancement_level)
+    filter['difficulty'] = { $in: advancement_level.split(',') };
+  if (ingredients_availability)
+    filter['ingredientsAvailability'] = {
+      $in: ingredients_availability.split(','),
     };
-    getFilters();
-  }, []);
+  if (diet_type) filter['diet'] = { $in: diet_type.split(',') };
+  if (region) filter['region'] = { $in: region.split(',') };
+  if (minPrepTime && maxPrepTime)
+    filter['prepTime'] = {
+      $gte: parseInt(minPrepTime),
+      $lte: parseInt(maxPrepTime),
+    };
+  if (minPrepTime)
+    filter['prepTime'] = {
+      $gte: parseInt(minPrepTime),
+    };
+  if (maxPrepTime)
+    filter['prepTime'] = {
+      $lte: parseInt(maxPrepTime),
+    };
 
-  const submitRecipe = async () => {
-    if (
-      recipeName.length < 3 ||
-      !recipeImage ||
-      recipeSteps.current.length < 2 ||
-      recipeIngredients.current.length < 2 ||
-      prepTime <= 0 ||
-      portionsNumber <= 0 ||
-      portionsNumber > 100
-    ) {
-      setIsError(true);
-      const isBrowser = typeof window !== 'undefined';
-      if (!isBrowser) return;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
+  const totalNumberOfPages = await getTotalPages(filter);
+  const currentPage = Number(searchParams.page) || 1;
 
-    const data = new FormData();
-    data.set('name', recipeName);
-    data.set('prepTime', prepTime);
-    data.set('ingredientsAvailability', ingredientsAval);
-    data.set('difficulty', advancementLevel);
-    data.set('portionsNumber', portionsNumber);
-    data.set('ingredients', JSON.stringify(recipeIngredients.current));
-    data.set('steps', JSON.stringify(recipeSteps.current));
-    data.set('diet', JSON.stringify(dietType));
-    data.set('region', JSON.stringify(region));
-    data.set('image', recipeImage);
-
-    const response = await fetch('/api/add-recipe', {
-      method: 'POST',
-      body: data,
-    });
-    if (response.status === 200) {
-      const responseBody = await response.json();
-      router.replace(`/recipe/${responseBody.id}`, { scroll: false });
-    }
-  };
-  
-
-  if (!filters) {
-    return <PageSpinner />;
-  }
+  const fetchedRecipes = await getPaginatedRecipes(currentPage, filter);
 
   return (
-    <div className='page_padding'>
-      <h1 className='section_header'>Filtruj (Not ready yet)</h1>
+    <>
+      <div className='page_padding'>
+        <FindFilters />
 
-      <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-        <FilterInput
-          filterObj={filters['advancement_level']}
-          stateElem={advancementLevel}
-          setStateElem={setAdvancementLevel}
-        />
-
-        <FilterInput
-          filterObj={filters['ingredients_availability']}
-          stateElem={ingredientsAval}
-          setStateElem={setIngredientsAval}
-        />
-
-        <div>
-          <label className='text-lg'>Czas przygotowania (w min)</label>
-          <input
-            type='number'
-            value={prepTime}
-            className='basic_input'
-            onChange={(e) => setPrepTime(e.target.value)}
-          />
-          {isError && prepTime <= 0 && (
-            <p className='error_msg'>
-              Czas przygotowania musi być większy od 0
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label className='text-lg'>Liczba porcji</label>
-          <input
-            type='number'
-            min={0}
-            max={20}
-            value={portionsNumber}
-            className='basic_input'
-            onChange={(e) => setPortionsNumber(e.target.value)}
-          />
-
-          {isError && (portionsNumber <= 0 || portionsNumber > 100) && (
-            <p className='error_msg'>
-              Liczba porcji musi być większa od 0 ale mniejsza od 50
-            </p>
-          )}
-        </div>
-
-        <MultiSelectDropdown
-          name="Rodzaj diety"
-          options={filters['diet_type'].availableOptions}
-          inputName={filters['diet_type'].filterDisplayName}
-          setOptions={setDietType}
-        />
-
-        <MultiSelectDropdown
-          name="Region pochodzenia"
-          options={filters['region'].availableOptions}
-          inputName={filters['region'].filterDisplayName}
-          setOptions={setRegion}
-        />
+        <h1 className='py-16 font-secondary text-4xl'>Dopasowane przepisy</h1>
       </div>
-    </div>
-
+      <RecipeGrid recipes={fetchedRecipes} />
+      <Pagination totalPages={totalNumberOfPages} />
+    </>
   );
 };
 

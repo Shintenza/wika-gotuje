@@ -1,12 +1,22 @@
-'use clinet';
+'use client';
 import { useEffect, useRef, useState } from 'react';
 import { MdArrowDropDown } from 'react-icons/md';
 import { FaCheck } from 'react-icons/fa6';
 import '@styles/MultiSelectDropdown.module.css';
+import { useSearchParams } from 'next/navigation';
 
-const MultiSelectDropdown = ({ inputName, options, setOptions, name }) => {
+const MultiSelectDropdown = ({
+  options,
+  setOptions,
+  name,
+  placeholder = 'Wybierz jedną lub więcej opcji',
+  param_name = null,
+}) => {
+  const param = useSearchParams().get(param_name);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState(
+    param ? param.split(',') : [],
+  );
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -22,7 +32,7 @@ const MultiSelectDropdown = ({ inputName, options, setOptions, name }) => {
   }, []);
 
   useEffect(() => {
-    setOptions(selectedOptions);
+    setOptions(selectedOptions, param_name);
   }, [selectedOptions]);
 
   const handleSelect = (e) => {
@@ -44,27 +54,31 @@ const MultiSelectDropdown = ({ inputName, options, setOptions, name }) => {
   };
 
   return (
-    <div className='select-none relative' ref={dropdownRef}>
+    <div className='relative select-none' ref={dropdownRef}>
       <label className='text-lg'>{name}</label>
       <div
         className='mt-3 flex items-center justify-between rounded-lg bg-w_gray p-3'
         onClick={() => setIsOpen(!isOpen)}
       >
         {selectedOptions.length > 0 ? (
-          <span>Wybrano elmentów: {selectedOptions.length}</span>
+          <span>Wybrano elementów: {selectedOptions.length}</span>
         ) : (
-          <span className='text-gray-400'>Wybierz jedną lub więcej opcji</span>
+          <span className='text-gray-400'>{placeholder}</span>
         )}
         <MdArrowDropDown />
       </div>
 
       <ul
         ref={dropdownRef}
-        className={`${!isOpen && 'hidden'} mt-1 rounded-lg bg-w_gray absolute w-full shadow-md z-10`}
+        className={`${
+          !isOpen && 'hidden'
+        } absolute z-10 mt-1 w-full rounded-lg bg-w_gray shadow-md`}
       >
         {options.map((option, count) => (
           <li
-            className='group rounded-lg p-2 text-gray-600 hover:bg-w_orange hover:text-white'
+            className={`${
+              selectedOptions.includes(option) ? 'active' : ''
+            } group rounded-lg p-2 text-gray-600 hover:bg-w_orange hover:text-white`}
             key={count}
             onClick={handleSelect}
           >

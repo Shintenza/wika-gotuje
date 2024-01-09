@@ -1,25 +1,25 @@
 import { connectDb } from '@utils/connectDb';
 import Recipe from '@models/Recipe';
-import User from '@models/User'
+import User from '@models/User';
 import { unstable_noStore as noStore } from 'next/cache';
 
 const PAGE_SIZE = 6;
 
-export const getTotalPages = async () => {
+export const getTotalPages = async (filter = {}) => {
   await connectDb();
   try {
-    const numberOfRecipies = await Recipe.countDocuments();
+    const numberOfRecipies = await Recipe.countDocuments(filter);
     return Math.ceil(numberOfRecipies / PAGE_SIZE);
   } catch (error) {
     throw new Error('Failed to fetch total number of pages');
   }
 };
 
-export const getPaginatedRecipes = async (page) => {
+export const getPaginatedRecipes = async (page, filter = {}) => {
   noStore();
   try {
     const skip = (page - 1) * PAGE_SIZE;
-    const recipies = await Recipe.find()
+    const recipes = await Recipe.find(filter)
       .sort({ dateAdded: -1 })
       .select('-diet -region -steps -ingredients -portionsNumber')
       .skip(skip)
@@ -27,10 +27,10 @@ export const getPaginatedRecipes = async (page) => {
       .populate({
         path: 'authorId',
         select: 'name image',
-        model: User
+        model: User,
       })
       .lean();
-    return recipies;
+    return recipes;
   } catch (error) {
     throw new Error('failed to fetch paginated recipies');
   }

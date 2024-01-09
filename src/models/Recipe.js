@@ -5,6 +5,7 @@ const recipeSchema = new Schema({
     type: String,
     required: true,
     minlength: 3,
+    index: true,
   },
   prepTime: {
     type: Number,
@@ -41,7 +42,7 @@ const recipeSchema = new Schema({
   ingredients: {
     type: [String],
     validate: {
-      validator: function(array) {
+      validator: function (array) {
         return array.length >= 2;
       },
       message: 'at least two ingredients are required',
@@ -50,7 +51,7 @@ const recipeSchema = new Schema({
   steps: {
     type: [String],
     validate: {
-      validator: function(array) {
+      validator: function (array) {
         return array.length >= 2;
       },
       message: 'at least two steps are required',
