@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-
+import '@styles/stars.css';
 import getStars from '@utils/getStars';
 
 export default function RatingStars({
@@ -8,6 +8,7 @@ export default function RatingStars({
   reviewCount: countInitial,
   recipeId,
 }) {
+  let stars = [];
   const [avgRating, setRating] = useState(ratingInitial);
   const [reviewCount, setCount] = useState(countInitial);
 
@@ -31,11 +32,32 @@ export default function RatingStars({
     }
   };
 
-  const stars = getStars(avgRating, submitReview);
+  const onMouseEnter = (e) => {
+    const index = parseInt(e.currentTarget.getAttribute('index'));
+    const stars = Array.from(document.getElementsByTagName('svg')).filter((e) =>
+      e.hasAttribute('index'),
+    );
+    for (let i = 0; i <= index; i++) {
+      stars[i].classList.add('hovered');
+    }
+  };
+
+  const onMouseLeave = (e) => {
+    const index = parseInt(e.currentTarget.getAttribute('index'));
+    const stars = Array.from(document.getElementsByTagName('svg')).filter((e) =>
+      e.hasAttribute('index'),
+    );
+    for (let i = 0; i <= index; i++) {
+      stars[i].classList.remove('hovered');
+    }
+  };
+
+  stars = getStars(avgRating, submitReview, onMouseEnter, onMouseLeave);
+
   return (
     <>
       <h2 className='pb-4 pt-12 font-secondary text-3xl'>Oceń przepis</h2>
-      <div className='flex flex-wrap items-center'>
+      <div className='transi flex flex-wrap items-center'>
         <div className='pr-10 text-xl'>
           Średnia {avgRating.toFixed(2)}/5 ({reviewCount} głosów)
         </div>

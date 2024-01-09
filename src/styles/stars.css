@@ -1,0 +1,6 @@
+.rating-star {
+    transition: 0.5s;
+}
+.hovered {
+    opacity: 70%;
+}

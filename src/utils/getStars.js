@@ -8,23 +8,32 @@ export function calcAvgRating(reviews) {
       }, 0) / reviews.length;
 }
 
-export default function getStars(rating, callback = null) {
+export default function getStars(
+  rating,
+  onClick = null,
+  onMouseEnter = null,
+  onMouseLeave = null,
+) {
   const stars = [];
 
   for (let i = 0; i < 5; i++) {
+    let star;
+    const props = {
+      color: '#FF8051',
+      index: i,
+      onClick,
+      onMouseEnter,
+      onMouseLeave,
+      className: 'rating-star',
+    };
     if (rating >= 0.75) {
-      stars.push(
-        <MdStar color='#FF8051' key={i} index={i} onClick={callback} />,
-      );
+      star = <MdStar key={i} {...props} />;
     } else if (rating >= 0.25) {
-      stars.push(
-        <MdStarHalf color='#FF8051' key={i} index={i} onClick={callback} />,
-      );
+      star = <MdStarHalf key={i} {...props} />;
     } else {
-      stars.push(
-        <MdStarBorder color='#FF8051' key={i} index={i} onClick={callback} />,
-      );
+      star = <MdStarBorder key={i} {...props} />;
     }
+    stars.push(star);
     rating--;
   }
 
