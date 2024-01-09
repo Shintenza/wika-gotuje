@@ -108,14 +108,6 @@ export default async function Page({ params }) {
         </div>
       </div>
 
-      <h1 className='py-[35px] font-secondary text-4xl'>
-        Przygotowałeś już ten przepis?
-      </h1>
-
-      <button className='max-w-fit rounded-xl bg-black px-28 py-5 text-lg text-white hover:opacity-80'>
-        Podziel się wrażeniami
-      </button>
-
       <CommentList
         comments={recipe.comments}
         avgRating={calcAvgRating(recipe.starReviews)}
