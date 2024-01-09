@@ -36,7 +36,7 @@ const LoginForm = ({ providers }) => {
 
   return (
     <div className='flex min-h-[50vh] items-center justify-center'>
-      <div className='relative flex w-2/5 flex-col items-center justify-center rounded-lg bg-w_gray py-5'>
+      <div className='relative flex w-full sm:4/5 md:w-2/5 flex-col items-center justify-center rounded-lg bg-w_gray py-5'>
         <Link href='/'>
           <Image
             src={wikagotuje_logo}
@@ -44,7 +44,7 @@ const LoginForm = ({ providers }) => {
             className='font-logo mx-auto w-1/2 object-contain'
           />
         </Link>
-        <p className='py-3'>
+        <p className='py-3 px-2 text-center'>
           Aby się zalogować wybierz jedną z poniższych metod
         </p>
         {Object.values(providers).map((provider) => (

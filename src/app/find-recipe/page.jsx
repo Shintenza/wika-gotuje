@@ -2,23 +2,12 @@
 
 import '@styles/add-recipe.css';
 import { useEffect, useRef, useState } from 'react';
-import { MdAddPhotoAlternate } from 'react-icons/md';
-import Image from 'next/image';
-import InteractiveList from '@components/InteractiveList';
 import FilterInput from '@components/FilterInput';
 import PageSpinner from '@components/PageSpinner';
-import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 import MultiSelectDropdown from '@components/MultiSelectDropdown';
 import { useRouter } from 'next/navigation';
 
 const Page = () => {
-  const { data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect('/api/auth/signin?callbackUrl=/add-recipe');
-    },
-  });
 
   const router = useRouter();
 
@@ -112,7 +101,7 @@ const Page = () => {
 
   return (
     <div className='page_padding'>
-      <h1 className='section_header'>Filtruj</h1>
+      <h1 className='section_header'>Filtruj (Not ready yet)</h1>
 
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
         <FilterInput
@@ -161,14 +150,14 @@ const Page = () => {
         </div>
 
         <MultiSelectDropdown
-          name="Rodzaj diety (opcjonalne)"
+          name="Rodzaj diety"
           options={filters['diet_type'].availableOptions}
           inputName={filters['diet_type'].filterDisplayName}
           setOptions={setDietType}
         />
 
         <MultiSelectDropdown
-          name="Region pochodzenia (opcjonalne)"
+          name="Region pochodzenia"
           options={filters['region'].availableOptions}
           inputName={filters['region'].filterDisplayName}
           setOptions={setRegion}
