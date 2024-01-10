@@ -28,16 +28,17 @@ const Page = async ({ searchParams }) => {
     };
   if (diet_type) filter['diet'] = { $in: diet_type.split(',') };
   if (region) filter['region'] = { $in: region.split(',') };
+  if (recipe_category) filter['category'] = { $in: recipe_category.split(',') };
   if (minPrepTime && maxPrepTime)
     filter['prepTime'] = {
       $gte: parseInt(minPrepTime),
       $lte: parseInt(maxPrepTime),
     };
-  if (minPrepTime)
+  else if (minPrepTime)
     filter['prepTime'] = {
       $gte: parseInt(minPrepTime),
     };
-  if (maxPrepTime)
+  else if (maxPrepTime)
     filter['prepTime'] = {
       $lte: parseInt(maxPrepTime),
     };

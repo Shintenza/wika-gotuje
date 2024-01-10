@@ -63,6 +63,7 @@ const recipeSchema = new Schema({
   region: {
     type: [String],
   },
+  category: {type: String, required: true},
   image: { type: String, required: true },
   authorId: { type: Schema.Types.ObjectId, ref: 'User' },
   dateAdded: { type: Date, default: Date.now },
