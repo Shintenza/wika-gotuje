@@ -3,7 +3,7 @@ import { FaRegCalendarAlt } from 'react-icons/fa';
 import { BiCommentDetail } from 'react-icons/bi';
 import Task from '@components/Task';
 import CommentList from '@components/CommentList';
-// import FollowButton from '@components/FollowButton';
+import FollowButton from '@components/FollowButton';
 import { getRecipe } from '@utils/getRecipes';
 import { notFound } from 'next/navigation';
 import PrintRecipe from '@components/PrintRecipe';
@@ -37,7 +37,7 @@ export default async function Page({ params }) {
           />
         </div>
         <p className='print_hide text-lg'>{recipe.author_name}</p>
-        {/*<FollowButton userId={recipe.author_id} />*/}
+        <FollowButton userId={recipe.author_id} />
         <div>
           <p className='inline-block pr-3'>
             <FaRegCalendarAlt className='inline-block text-lg' /> {}

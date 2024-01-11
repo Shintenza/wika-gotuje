@@ -1,7 +1,7 @@
 'use client';
 
 import '@styles/add-recipe.css';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { MdAddPhotoAlternate } from 'react-icons/md';
 import Image from 'next/image';
 import InteractiveList from '@components/InteractiveList';
@@ -11,6 +11,7 @@ import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import MultiSelectDropdown from '@components/MultiSelectDropdown';
 import { useRouter } from 'next/navigation';
+import { Filters } from '@utils/filters';
 
 const Page = () => {
   const { data: session } = useSession({
@@ -23,10 +24,10 @@ const Page = () => {
   const router = useRouter();
 
   const [isError, setIsError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const [recipeName, setRecipeName] = useState('');
   const [recipeImage, setRecipeImage] = useState(null);
-  const [filters, setFilters] = useState(null);
 
   const [recipeCategory, setRecipeCategory] = useState('');
   const [ingredientsAval, setIngredientsAval] = useState('');
@@ -49,23 +50,6 @@ const Page = () => {
     setRecipeImage(selectedFile);
   };
 
-  useEffect(() => {
-    const getFilters = async () => {
-      const fetchedFilters = await fetch('/api/filters');
-      const parsedFilters = await fetchedFilters.json();
-
-      const filtersDict = {};
-
-      parsedFilters.forEach((item) => {
-        const { filterName, _id, ...rest } = item;
-        filtersDict[item.filterName] = rest;
-      });
-
-      setFilters(filtersDict);
-    };
-    getFilters();
-  }, []);
-
   const submitRecipe = async () => {
     if (
       recipeName.length < 3 ||
@@ -85,15 +69,18 @@ const Page = () => {
 
     const data = new FormData();
     data.set('name', recipeName);
+    data.set('category', recipeCategory);
     data.set('prepTime', prepTime);
-    data.set('ingredientsAvailability', ingredientsAval);
+    data.set('availability', ingredientsAval);
     data.set('difficulty', advancementLevel);
-    data.set('portionsNumber', portionsNumber);
+    data.set('portions', portionsNumber);
     data.set('ingredients', JSON.stringify(recipeIngredients.current));
     data.set('steps', JSON.stringify(recipeSteps.current));
     data.set('diet', JSON.stringify(dietType));
     data.set('region', JSON.stringify(region));
     data.set('image', recipeImage);
+
+    setSubmitting(true);
 
     const response = await fetch('/api/add-recipe', {
       method: 'POST',
@@ -101,13 +88,13 @@ const Page = () => {
     });
     if (response.status == 200) {
       const responseBody = await response.json();
-      router.replace(`/recipe/${responseBody.id}`, { scroll: false });
+      router.replace(`/recipe/${responseBody.id}`);
+    } else {
+      setSubmitting(false);
     }
   };
 
-  if (!filters) {
-    return <PageSpinner />;
-  }
+  if (submitting) return <PageSpinner />;
 
   return (
     <div className='page_padding'>
@@ -131,9 +118,9 @@ const Page = () => {
           )}
         </div>
 
-        <div className='sm:row-start-2 sm:row-span-1'>
+        <div className='sm:row-span-1 sm:row-start-2'>
           <FilterInput
-            filterObj={filters['recipe_category']}
+            filterObj={Filters.category}
             stateElem={recipeCategory}
             setStateElem={setRecipeCategory}
           />
@@ -199,13 +186,13 @@ const Page = () => {
 
       <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
         <FilterInput
-          filterObj={filters['advancement_level']}
+          filterObj={Filters.difficulty}
           stateElem={advancementLevel}
           setStateElem={setAdvancementLevel}
         />
 
         <FilterInput
-          filterObj={filters['ingredients_availability']}
+          filterObj={Filters.availability}
           stateElem={ingredientsAval}
           setStateElem={setIngredientsAval}
         />
@@ -244,16 +231,16 @@ const Page = () => {
         </div>
 
         <MultiSelectDropdown
-          name = "Rodzaj diety (opcjonalne)"
-          options={filters['diet_type'].availableOptions}
-          inputName={filters['diet_type'].filterDisplayName}
+          name='Rodzaj diety (opcjonalne)'
+          options={Filters.diet.options}
+          inputName={Filters.diet.displayName}
           setOptions={setDietType}
         />
 
         <MultiSelectDropdown
-          name = "Region pochodzenia (opcjonalne)"
-          options={filters['region'].availableOptions}
-          inputName={filters['region'].filterDisplayName}
+          name='Region pochodzenia (opcjonalne)'
+          options={Filters.region.options}
+          inputName={Filters.region.displayName}
           setOptions={setRegion}
         />
       </div>

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { FaFire, FaRegCalendarAlt, FaRegClock } from 'react-icons/fa';
 import { BiCommentDetail } from 'react-icons/bi';
 import getStars from '@utils/getStars';
-// import RecipeLikeButton from '@components/RecipeLikeButton';
+import RecipeLikeButton from '@components/RecipeLikeButton';
 
 const RecipeCard = async ({ recipeDetails, clickHandle }) => {
   const {
@@ -29,7 +29,7 @@ const RecipeCard = async ({ recipeDetails, clickHandle }) => {
 
   return (
     <div className='relative flex w-full flex-col rounded-lg bg-w_gray'>
-      {/*<RecipeLikeButton recipeId={id.toString()} clickHandle={clickHandle} />*/}
+      <RecipeLikeButton recipeId={id} clickHandle={clickHandle} />
       <Link scroll={false} href={`recipe/${id}`}>
         <div className=' relative min-h-[227px] w-full '>
           <Image

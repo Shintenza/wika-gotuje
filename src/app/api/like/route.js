@@ -1,5 +1,4 @@
-import User from '@models/User';
-import mongoose from 'mongoose';
+import { query } from '@utils/database';
 import { getToken } from 'next-auth/jwt';
 
 const ELEMENTS_TO_FETCH = 6;
@@ -13,73 +12,34 @@ export const GET = async (req) => {
     });
   }
 
-  const page = Number(req.nextUrl.searchParams.get('page')) - 1 || 0;
+  // const page = Number(req.nextUrl.searchParams.get('page')) - 1 || 0;
 
-  const newResponse = await User.aggregate([
-    {
-      $match: {
-        _id: new mongoose.Types.ObjectId(token.id),
-      },
-    },
-    {
-      $project: {
-        totalNumber: {
-          $size: '$likedRecipes',
-        },
-        likedRecipes: {
-          $slice: [
-            '$likedRecipes',
-            page * ELEMENTS_TO_FETCH,
-            ELEMENTS_TO_FETCH,
-          ],
-        },
-      },
-    },
-    {
-      $lookup: {
-        from: 'recipes',
-        localField: 'likedRecipes',
-        foreignField: '_id',
-        pipeline: [
-          {
-            $lookup: {
-              from: 'users',
-              localField: 'authorId',
-              foreignField: '_id',
-              as: 'authorId',
-            },
-          },
-          { $unwind: '$authorId' },
-        ],
-        as: 'likedRecipes',
-      },
-    },
-    {
-      $project: {
-        totalNumber: 1,
-        likedRecipes: {
-          _id: 1,
-          name: 1,
-          image: 1,
-          prepTime: 1,
-          difficulty: 1,
-          portionsNumber: 1,
-          authorId: {
-            name: 1,
-            image: 1,
-          },
-          starReviews: 1,
-          comments: 1,
-          dateAdded: 1,
-        },
-      },
-    },
-  ]);
+  const result = await query(
+    `SELECT
+     r.*,
+     u.*,
+     COUNT(comments.id) AS comment_count,
+     COUNT(DISTINCT stars.author_id) AS review_count,
+     COALESCE(AVG(stars.amount), 0) AS avg_rating
+     FROM likes l
+     JOIN recipes r ON (r.id = l.recipe_id)
+     LEFT JOIN comments ON (r.id = comments.recipe_id)
+     LEFT JOIN stars ON (r.id = stars.recipe_id)
+     JOIN (SELECT
+     id AS author_id,
+     name AS author_name,
+     image AS author_image FROM users) u
+     ON r.author_id = u.author_id
+     WHERE l.user_id = $1
+     GROUP BY r.id, u.author_id, u.author_name, u.author_image;`,
+    [token.id],
+  );
 
   return new Response(
     JSON.stringify({
-      totalNumber: Math.ceil(newResponse[0].totalNumber / ELEMENTS_TO_FETCH),
-      recipes: newResponse[0].likedRecipes,
+      // totalNumber: Math.ceil(newResponse[0].totalNumber / ELEMENTS_TO_FETCH),
+      totalNumber: 1,
+      recipes: result.rows,
     }),
     { status: 200 },
   );
