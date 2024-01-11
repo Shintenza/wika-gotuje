@@ -1,10 +1,11 @@
 import Pagination from '@components/Pagination';
 import RecipeGrid from '@components/RecipeGrid';
-import { getTotalPages } from '@utils/getRecipes';
+// import { getTotalPages } from '@utils/getRecipes';
 import { getPaginatedRecipes } from '@utils/getRecipes';
 
 const Page = async ({ searchParams }) => {
-  const totalNumberOfPages = await getTotalPages();
+  // const totalNumberOfPages = await getTotalPages();
+  const totalNumberOfPages = 1;
   const currentPage = Number(searchParams.page) || 1;
 
   const fetchedRecipes = await getPaginatedRecipes(currentPage);
