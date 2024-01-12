@@ -25,8 +25,8 @@ export default function RatingStars({
 
     if (res.status == 200) {
       const reviews = await res.json();
-      setRating(reviews.avgRating);
-      setCount(reviews.reviewCount);
+      setRating(parseFloat(reviews.avg_rating));
+      setCount(reviews.review_count);
     } else {
       //TODO
     }

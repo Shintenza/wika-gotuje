@@ -2,8 +2,7 @@ import NextAuth from 'next-auth/next';
 import GithubProvider from 'next-auth/providers/github';
 import FacebookProvider from 'next-auth/providers/facebook';
 import GoogleProvider from 'next-auth/providers/google';
-import { connectDb } from '@utils/connectDb';
-import User from '@models/User';
+import { query } from '@utils/database';
 
 const authOptions = {
   providers: [
@@ -23,30 +22,29 @@ const authOptions = {
   callbacks: {
     async signIn({ profile, user }) {
       try {
-        await connectDb();
-
-        const dbUser = await User.findOne({
-          email: profile.email,
-        });
+        const dbUser = (
+          await query('SELECT * FROM users WHERE email = $1', [profile.email])
+        ).rows[0];
 
         if (!dbUser) {
           user.role = 'user';
-          const newDbUser = new User({
-            email: profile.email,
-            name: profile.name == null ? profile.login : profile.name,
-            role: 'user',
-            image: user.image,
-          });
-          const savedDbUser = await newDbUser.save();
-          user.id = savedDbUser._id.toString();
+          const result = await query(
+            'INSERT INTO users (name, email, image) VALUES ($1, $2, $3) RETURNING id',
+            [
+              profile.name == null ? profile.login : profile.name,
+              profile.email,
+              user.image,
+            ],
+          );
+          user.id = result.rows[0].id;
         } else {
-          user.role = dbUser.role;
-          user.id = dbUser._id.toString();
+          user.role = 'user';
+          user.id = dbUser.id;
         }
 
         return true;
       } catch (error) {
-        console.log(error);
+        console.error(error);
         return false;
       }
     },
@@ -54,7 +52,6 @@ const authOptions = {
       if (user) {
         token.role = user.role;
         token.id = user.id;
-        console.log('testtt');
       }
       return token;
     },
@@ -68,7 +65,7 @@ const authOptions = {
   },
 
   pages: {
-    signIn: '/auth/signin'
+    signIn: '/auth/signin',
   },
 };
 

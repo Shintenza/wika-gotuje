@@ -1,7 +1,5 @@
-import User from '@models/User';
 import { getToken } from 'next-auth/jwt';
-import mongoose from 'mongoose';
-import { connectDb } from '@utils/connectDb';
+import { query } from '@utils/database';
 
 export const POST = async (req) => {
   const token = await getToken({ req });
@@ -13,14 +11,11 @@ export const POST = async (req) => {
   }
 
   const { recipeId } = await req.json();
-  const id = new mongoose.Types.ObjectId(recipeId);
-  await connectDb();
 
-  const result = await User.findByIdAndUpdate(token.id, {
-    $pull: {
-      likedRecipes: id,
-    },
-  });
+  await query('DELETE FROM likes WHERE user_id = $1 and recipe_id = $2;', [
+    token.id,
+    recipeId,
+  ]);
 
   return new Response(JSON.stringify({ message: 'ok', recipeId }), {
     status: 200,

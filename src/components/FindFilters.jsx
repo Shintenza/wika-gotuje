@@ -1,36 +1,16 @@
 'use client';
 
 import '@styles/add-recipe.css';
-import { useEffect, useState } from 'react';
-import PageSpinner from '@components/PageSpinner';
 import MultiSelectDropdown from '@components/MultiSelectDropdown';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import SearchBar from '@components/SearchBar';
 import { useDebouncedCallback } from 'use-debounce';
+import { Filters } from '@utils/filters';
 
 const FindFilters = () => {
-  const [filters, setFilters] = useState(null);
-
   const searchParams = useSearchParams();
   const minPrepTime = searchParams.get('minPrepTime');
   const maxPrepTime = searchParams.get('maxPrepTime');
-
-  useEffect(() => {
-    const getFilters = async () => {
-      const fetchedFilters = await fetch('/api/filters');
-      const parsedFilters = await fetchedFilters.json();
-
-      const filtersDict = {};
-
-      parsedFilters.forEach((item) => {
-        const { filterName, _id, ...rest } = item;
-        filtersDict[item.filterName] = rest;
-      });
-
-      setFilters(filtersDict);
-    };
-    getFilters();
-  }, []);
 
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -45,10 +25,6 @@ const FindFilters = () => {
     replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, 300);
 
-  if (!filters) {
-    return <PageSpinner />;
-  }
-
   return (
     <>
       <h1 className='pb-5 font-secondary text-4xl'>Filtruj</h1>
@@ -56,35 +32,35 @@ const FindFilters = () => {
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
         <SearchBar name='Nazwa' paramName='name' onChange={handleSearch} />
         <MultiSelectDropdown
-          options={filters['recipe_category'].availableOptions}
-          name={filters['recipe_category'].filterDisplayName}
+          options={Filters.category.options}
+          name={Filters.category.displayName}
           setOptions={handleSearch}
           placeholder='Wszystkie'
-          param_name='recipe_category'
+          param_name='category'
         />
 
         <MultiSelectDropdown
-          options={filters['advancement_level'].availableOptions}
-          name={filters['advancement_level'].filterDisplayName}
+          options={Filters.difficulty.options}
+          name={Filters.difficulty.displayName}
           setOptions={handleSearch}
           placeholder='Wszystkie'
-          param_name='advancement_level'
+          param_name='difficulty'
         />
 
         <MultiSelectDropdown
-          options={filters['ingredients_availability'].availableOptions}
-          name={filters['ingredients_availability'].filterDisplayName}
+          options={Filters.availability.options}
+          name={Filters.availability.displayName}
           setOptions={handleSearch}
           placeholder='Wszystkie'
-          param_name='ingredients_availability'
+          param_name='availability'
         />
 
         <MultiSelectDropdown
-          options={filters['diet_type'].availableOptions}
-          name={filters['diet_type'].filterDisplayName}
+          options={Filters.diet.options}
+          name={Filters.diet.displayName}
           setOptions={handleSearch}
           placeholder='Wszystkie'
-          param_name='diet_type'
+          param_name='diet'
         />
 
         <div>
@@ -112,8 +88,8 @@ const FindFilters = () => {
         </div>
 
         <MultiSelectDropdown
-          options={filters['region'].availableOptions}
-          name={filters['region'].filterDisplayName}
+          options={Filters.region.options}
+          name={Filters.region.displayName}
           setOptions={handleSearch}
           placeholder='Wszystkie'
           param_name='region'

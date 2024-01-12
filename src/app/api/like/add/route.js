@@ -1,7 +1,5 @@
-import User from '@models/User';
 import { getToken } from 'next-auth/jwt';
-import mongoose from 'mongoose';
-import { connectDb } from '@utils/connectDb';
+import { query } from '@utils/database';
 
 export const POST = async (req) => {
   const token = await getToken({ req });
@@ -13,16 +11,11 @@ export const POST = async (req) => {
   }
 
   const { recipeId } = await req.json();
-  const id = new mongoose.Types.ObjectId(recipeId);
-  await connectDb();
 
-  const result = await User.findByIdAndUpdate(
+  await query('INSERT INTO likes (user_id, recipe_id) VALUES ($1, $2)', [
     token.id,
-    {
-      $addToSet: { likedRecipes: id, position: 0 },
-    },
-    { new: true },
-  );
+    recipeId,
+  ]);
 
   return new Response(JSON.stringify({ message: 'ok', recipeId }), {
     status: 200,

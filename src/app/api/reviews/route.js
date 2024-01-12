@@ -1,5 +1,4 @@
-import Recipe from '@models/Recipe';
-import { calcAvgRating } from '@utils/getStars';
+import { query } from '@utils/database';
 import { getToken } from 'next-auth/jwt';
 
 export const POST = async (req) => {
@@ -13,38 +12,25 @@ export const POST = async (req) => {
 
   const data = await req.formData();
   try {
-    const newReview = {
-      authorId: token.id,
-      stars: data.get('stars'),
-    };
-    await Recipe.updateOne(
-      { _id: data.get('recipeId') },
-      {
-        $pull: {
-          starReviews: { authorId: token.id },
-        },
-      },
+    await query(
+      `INSERT INTO stars (author_id, recipe_id, amount) VALUES ($1, $2, $3)
+       ON CONFLICT ON CONSTRAINT stars_pkey DO UPDATE
+       SET amount = EXCLUDED.amount;`,
+      [token.id, data.get('recipeId'), data.get('stars')],
     );
-    const result = await Recipe.findOneAndUpdate(
-      { _id: data.get('recipeId') },
-      {
-        $push: {
-          starReviews: newReview,
-        },
-      },
-      { new: true, fields: 'starReviews', upsert: true },
+    const result = await query(
+      `SELECT
+       COALESCE(AVG(stars.amount), 0) AS avg_rating,
+       COUNT(stars.author_id) AS review_count
+       FROM stars WHERE recipe_id = $1;
+       `,
+      [data.get('recipeId')],
     );
-    return new Response(
-      JSON.stringify({
-        reviewCount: result.starReviews.length,
-        avgRating: calcAvgRating(result.starReviews),
-      }),
-      {
-        status: 200,
-      },
-    );
+    return new Response(JSON.stringify(result.rows[0]), {
+      status: 200,
+    });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return new Response(error, { status: 500 });
   }
 };

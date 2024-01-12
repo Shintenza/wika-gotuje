@@ -1,6 +1,4 @@
-import User from '@models/User';
-import { connectDb } from '@utils/connectDb';
-import mongoose from 'mongoose';
+import { query } from '@utils/database';
 
 export const GET = async (req) => {
   const userId = req.nextUrl.searchParams.get('userId');
@@ -11,20 +9,13 @@ export const GET = async (req) => {
       status: 400,
     });
 
-  await connectDb();
   try {
-    const userObjId = new mongoose.Types.ObjectId(userId);
-    const recipeObjId = new mongoose.Types.ObjectId(recipeId);
+    const result = await query(
+      'SELECT EXISTS (SELECT 1 FROM likes WHERE user_id = $1 and recipe_id = $2) as liked;',
+      [userId, recipeId],
+    );
 
-    const results = await User.findOne({
-      _id: userObjId,
-      likedRecipes: { $in: [recipeObjId] },
-    });
-    if (results) {
-      return new Response(JSON.stringify({ liked: true }), { status: 200 });
-    } else {
-      return new Response(JSON.stringify({ liked: false }), { status: 200 });
-    }
+    return new Response(JSON.stringify(result.rows[0]), { status: 200 });
   } catch (error) {
     console.error(error);
     return new Response('server error while fetching isLiked', { status: 500 });

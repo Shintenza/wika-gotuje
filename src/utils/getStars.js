@@ -1,6 +1,7 @@
 import { MdStar, MdStarHalf, MdStarBorder } from 'react-icons/md';
 
 export function calcAvgRating(reviews) {
+  if (!reviews) return 0;
   return reviews.length == 0
     ? 0
     : reviews.reduce((a, b) => {

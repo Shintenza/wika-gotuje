@@ -1,7 +1,5 @@
-import User from '@models/User';
+import { query } from '@utils/database';
 import { getToken } from 'next-auth/jwt';
-import { connectDb } from '@utils/connectDb';
-import mongoose from 'mongoose';
 
 export const POST = async (req) => {
   const token = await getToken({ req });
@@ -14,12 +12,15 @@ export const POST = async (req) => {
 
   try {
     const { userId } = await req.json();
-    const id = new mongoose.Types.ObjectId(userId);
-    await connectDb();
 
-    await User.findByIdAndUpdate(token.id, {
-      $addToSet: { follows: id, position: 0 },
-    });
+    if (userId == token.id) {
+      return new Response({ status: 400 });
+    }
+
+    await query(
+      `INSERT INTO follows (follower_id, followee_id) VALUES ($1, $2)`,
+      [token.id, userId],
+    );
 
     return new Response({ status: 200 });
   } catch (e) {
@@ -39,11 +40,11 @@ export const DELETE = async (req) => {
 
   try {
     const { userId } = await req.json();
-    const id = new mongoose.Types.ObjectId(userId);
-    await connectDb();
-    await User.findByIdAndUpdate(token.id, {
-      $pull: { follows: id },
-    });
+
+    await query(
+      `DELETE FROM follows WHERE (follower_id = $1 and followee_id = $2);`,
+      [token.id, userId],
+    );
 
     return new Response({ status: 200 });
   } catch (e) {
@@ -62,14 +63,11 @@ export const GET = async (req) => {
   }
 
   try {
-    const userId = req.nextUrl.searchParams.get('userId');
-    const id = new mongoose.Types.ObjectId(userId);
-    await connectDb();
-    const result = await User.findOne({
-      _id: token.id,
-      follows: { $in: id },
-    });
-    return new Response(JSON.stringify({ follows: result != null }), {
+    const result = await query(
+      `SELECT EXISTS (SELECT 1 FROM follows WHERE follower_id = $1 and followee_id = $2) as follows`,
+      [token.id, req.nextUrl.searchParams.get('userId')],
+    );
+    return new Response(JSON.stringify(result.rows[0]), {
       status: 200,
     });
   } catch (e) {

@@ -1,8 +1,8 @@
-import Recipe from '@models/Recipe';
 import { getToken } from 'next-auth/jwt';
 import { writeFile } from 'fs/promises';
 import { existsSync, mkdirSync } from 'fs';
 import { extname } from 'path';
+import { query } from '@utils/database';
 
 const generateUniqueImageName = (imgName) => {
   const extension = extname(imgName);
@@ -39,23 +39,43 @@ export const POST = async (req) => {
     const newFileName = generateUniqueImageName(imageFile.name);
     await writeFile(savePath + newFileName, buffer);
 
-    const newRecipe = new Recipe({
-      name: data.get('name'),
-      prepTime: parseInt(data.get('prepTime')),
-      ingredientsAvailability: data.get('ingredientsAvailability'),
-      difficulty: data.get('difficulty'),
-      portionsNumber: data.get('portionsNumber'),
-      ingredients: JSON.parse(data.get('ingredients')),
-      steps: JSON.parse(data.get('steps')),
-      diet: JSON.parse(data.get('diet')),
-      region: JSON.parse(data.get('region')),
-      image: savePath.substring(8) + newFileName,
-      authorId: token.id,
+    const result = await query(
+      `INSERT INTO recipes (
+        name,
+        prep_time,
+        difficulty,
+        category,
+        availability,
+        diet,
+        region,
+        portions,
+        ingredients,
+        steps,
+        image,
+        author_id
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+      RETURNING id;
+      `,
+      [
+        data.get('name'),
+        data.get('prepTime'),
+        data.get('difficulty'),
+        data.get('category'),
+        data.get('availability'),
+        JSON.parse(data.get('diet')),
+        JSON.parse(data.get('region')),
+        data.get('portions'),
+        JSON.parse(data.get('ingredients')),
+        JSON.parse(data.get('steps')),
+        savePath.substring(8) + newFileName,
+        token.id,
+      ],
+    );
+    return new Response(JSON.stringify(result.rows[0]), {
+      status: 200,
     });
-    const savedRecipe = await newRecipe.save();
-    return new Response(JSON.stringify({message: "ok", id: savedRecipe.id}), { status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return new Response(error, { status: 500 });
   }
 };

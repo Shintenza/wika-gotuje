@@ -39,7 +39,7 @@ const CommentList = ({
 
     if (res.status == 200) {
       const comment = await res.json();
-      comment.commentDateAdded = new Date(comment.commentDateAdded);
+      comment.added = new Date(comment.added);
       setComments([comment].concat(comments));
       setLoadedCount(loadedCount + 1);
       headerRef.current.scrollIntoView();
@@ -89,7 +89,8 @@ const CommentList = ({
   };
 
   const scrollToWriteComment = () => {
-    if (writeCommentRef) writeCommentRef.current.scrollIntoView();
+    if (writeCommentRef)
+      writeCommentRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (

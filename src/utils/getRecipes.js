@@ -1,56 +1,130 @@
-import { connectDb } from '@utils/connectDb';
-import Recipe from '@models/Recipe';
-import User from '@models/User';
 import { unstable_noStore as noStore } from 'next/cache';
+import { query } from './database';
 
 const PAGE_SIZE = 6;
 
-export const getTotalPages = async (filter = {}) => {
-  await connectDb();
+const getTotalPages = async (totalRecipeCount) => {
+  return Math.ceil(totalRecipeCount / PAGE_SIZE);
+};
+
+export const getRecipes = async (page) => {
+  noStore();
   try {
-    const numberOfRecipies = await Recipe.countDocuments(filter);
-    return Math.ceil(numberOfRecipies / PAGE_SIZE);
+    const recipes = (
+      await query(
+        `SELECT * FROM detailed_recipes
+         ORDER BY id DESC
+         LIMIT $1 OFFSET $2`,
+        [PAGE_SIZE, (page - 1) * PAGE_SIZE],
+      )
+    ).rows;
+    return [recipes, getTotalPages(recipes.length)];
   } catch (error) {
-    throw new Error('Failed to fetch total number of pages');
+    console.error(error);
+    throw new Error('failed to fetch paginated recipes');
   }
 };
 
-export const getPaginatedRecipes = async (page, filter = {}) => {
+export const getFilteredRecipes = async (page, filters) => {
   noStore();
   try {
-    const skip = (page - 1) * PAGE_SIZE;
-    const recipes = await Recipe.find(filter)
-      .sort({ dateAdded: -1 })
-      .select('-diet -region -steps -ingredients -portionsNumber')
-      .skip(skip)
-      .limit(PAGE_SIZE)
-      .populate({
-        path: 'authorId',
-        select: 'name image',
-        model: User,
-      })
-      .lean();
-    return recipes;
+    const { name, minPrepTime, maxPrepTime } = filters;
+    const difficulty = filters.difficulty
+      ? filters.difficulty.split(',')
+      : null;
+    const category = filters.category ? filters.category.split(',') : null;
+    const availability = filters.availability
+      ? filters.availability.split(',')
+      : null;
+    const diet = filters.diet ? filters.diet.split(',') : null;
+    const region = filters.region ? filters.region.split(',') : null;
+
+    const recipes = (
+      await query(
+        `SELECT * FROM detailed_recipes
+         WHERE
+          CASE WHEN $1::difficulty[] IS NOT NULL THEN difficulty = ANY ($1) ELSE true END AND
+          CASE WHEN $2::category[] IS NOT NULL THEN category = ANY ($2) ELSE true END AND
+          CASE WHEN $3::ingredients_availability[] IS NOT NULL THEN availability = ANY ($3) ELSE true END AND
+          CASE WHEN $4::diet[] IS NOT NULL THEN diet && ($4) ELSE true END AND
+          CASE WHEN $5::region[] IS NOT NULL THEN region && ($5) ELSE true END AND
+          CASE WHEN $6::INTEGER IS NOT NULL THEN prep_time >= $6 ELSE true END AND
+          CASE WHEN $7::INTEGER IS NOT NULL THEN prep_time <= $7 ELSE true END AND
+          CASE WHEN $8::text IS NOT NULL THEN
+            to_tsvector('pl_ispell', name) @@ websearch_to_tsquery($8)
+          ELSE true END
+         ORDER BY id DESC
+         LIMIT $9 OFFSET $10`,
+        [
+          difficulty,
+          category,
+          availability,
+          diet,
+          region,
+          minPrepTime,
+          maxPrepTime,
+          name,
+          PAGE_SIZE,
+          (page - 1) * PAGE_SIZE,
+        ],
+      )
+    ).rows;
+
+    return [recipes, getTotalPages(recipes.length)];
   } catch (error) {
-    throw new Error('failed to fetch paginated recipies');
+    console.error(error);
+    throw new Error('failed to fetch paginated recipes');
+  }
+};
+
+export const getLikedRecipes = async (page, userId) => {
+  noStore();
+  try {
+    const recipes = (
+      await query(
+        `SELECT r.* FROM likes l
+         JOIN detailed_recipes r ON r.id = l.recipe_id
+         WHERE l.user_id = $1
+         ORDER BY id DESC
+         LIMIT $2 OFFSET $3`,
+        [userId, PAGE_SIZE, (page - 1) * PAGE_SIZE],
+      )
+    ).rows;
+    return [recipes, getTotalPages(recipes.length)];
+  } catch (error) {
+    console.error(error);
+    throw new Error('failed to fetch paginated recipes');
+  }
+};
+
+export const getFollowedRecipes = async (page, userId) => {
+  noStore();
+  try {
+    const recipes = (
+      await query(
+        `SELECT r.* FROM follows f
+         JOIN detailed_recipes r ON r.author_id = f.followee_id
+         WHERE f.follower_id = $1
+         ORDER BY id DESC
+         LIMIT $2 OFFSET $3`,
+        [userId, PAGE_SIZE, (page - 1) * PAGE_SIZE],
+      )
+    ).rows;
+    return [recipes, getTotalPages(recipes.length)];
+  } catch (error) {
+    console.error(error);
+    throw new Error('failed to fetch paginated recipes');
   }
 };
 
 export const getRecipe = async (id) => {
-  await connectDb();
   try {
-    const recipe = await Recipe.findById(id)
-      .populate({
-        path: 'authorId',
-        select: 'name image',
-      })
-      .populate({
-        path: 'comments.authorId',
-        select: 'name image',
-      })
-      .lean();
-    return recipe;
+    const recipe = (
+      await query('SELECT * FROM detailed_recipes WHERE id = $1', [id])
+    ).rows;
+    return recipe[0];
   } catch (error) {
+    console.error(error);
     return null;
   }
 };
