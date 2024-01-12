@@ -49,9 +49,12 @@ export const getFilteredRecipes = async (page, filters) => {
           CASE WHEN $4::diet[] IS NOT NULL THEN diet && ($4) ELSE true END AND
           CASE WHEN $5::region[] IS NOT NULL THEN region && ($5) ELSE true END AND
           CASE WHEN $6::INTEGER IS NOT NULL THEN prep_time >= $6 ELSE true END AND
-          CASE WHEN $7::INTEGER IS NOT NULL THEN prep_time <= $7 ELSE true END
+          CASE WHEN $7::INTEGER IS NOT NULL THEN prep_time <= $7 ELSE true END AND
+          CASE WHEN $8::text IS NOT NULL THEN
+            to_tsvector('pl_ispell', name) @@ websearch_to_tsquery($8)
+          ELSE true END
          ORDER BY id DESC
-         LIMIT $8 OFFSET $9`,
+         LIMIT $9 OFFSET $10`,
         [
           difficulty,
           category,
@@ -60,6 +63,7 @@ export const getFilteredRecipes = async (page, filters) => {
           region,
           minPrepTime,
           maxPrepTime,
+          name,
           PAGE_SIZE,
           (page - 1) * PAGE_SIZE,
         ],

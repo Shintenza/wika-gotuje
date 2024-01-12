@@ -1,7 +1,6 @@
 'use client';
 
 import '@styles/add-recipe.css';
-import PageSpinner from '@components/PageSpinner';
 import MultiSelectDropdown from '@components/MultiSelectDropdown';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import SearchBar from '@components/SearchBar';
