@@ -1,52 +1,16 @@
 import Pagination from '@components/Pagination';
 import RecipeGrid from '@components/RecipeGrid';
 import FindFilters from '@components/FindFilters';
-import { getTotalPages } from '@utils/getRecipes';
-import { getPaginatedRecipes } from '@utils/getRecipes';
 import '@styles/add-recipe.css';
+import { getFilteredRecipes } from '@utils/getRecipes';
 
 const Page = async ({ searchParams }) => {
-  const {
-    name,
-    recipe_category,
-    ingredients_availability,
-    diet_type,
-    region,
-    advancement_level,
-    minPrepTime,
-    maxPrepTime,
-  } = searchParams;
-
-  const filter = {};
-
-  if (name) filter['$text'] = { $search: name };
-  if (advancement_level)
-    filter['difficulty'] = { $in: advancement_level.split(',') };
-  if (ingredients_availability)
-    filter['ingredientsAvailability'] = {
-      $in: ingredients_availability.split(','),
-    };
-  if (diet_type) filter['diet'] = { $in: diet_type.split(',') };
-  if (region) filter['region'] = { $in: region.split(',') };
-  if (recipe_category) filter['category'] = { $in: recipe_category.split(',') };
-  if (minPrepTime && maxPrepTime)
-    filter['prepTime'] = {
-      $gte: parseInt(minPrepTime),
-      $lte: parseInt(maxPrepTime),
-    };
-  else if (minPrepTime)
-    filter['prepTime'] = {
-      $gte: parseInt(minPrepTime),
-    };
-  else if (maxPrepTime)
-    filter['prepTime'] = {
-      $lte: parseInt(maxPrepTime),
-    };
-
-  const totalNumberOfPages = await getTotalPages(filter);
   const currentPage = Number(searchParams.page) || 1;
 
-  const fetchedRecipes = await getPaginatedRecipes(currentPage, filter);
+  const [recipes, totalPages] = await getFilteredRecipes(
+    currentPage,
+    searchParams,
+  );
 
   return (
     <>
@@ -55,8 +19,8 @@ const Page = async ({ searchParams }) => {
 
         <h1 className='py-16 font-secondary text-4xl'>Dopasowane przepisy</h1>
       </div>
-      <RecipeGrid recipes={fetchedRecipes} />
-      <Pagination totalPages={totalNumberOfPages} />
+      <RecipeGrid recipes={recipes} />
+      <Pagination totalPages={totalPages} />
     </>
   );
 };

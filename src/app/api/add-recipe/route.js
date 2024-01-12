@@ -75,7 +75,7 @@ export const POST = async (req) => {
       status: 200,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return new Response(error, { status: 500 });
   }
 };

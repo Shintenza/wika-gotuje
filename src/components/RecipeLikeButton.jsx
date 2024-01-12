@@ -18,10 +18,10 @@ const RecipeLikeButton = ({ recipeId, clickHandle = null }) => {
 
       const response = await fetch(
         '/api/like/check?' +
-        new URLSearchParams({
-          userId: session.user.id,
-          recipeId,
-        }),
+          new URLSearchParams({
+            userId: session.user.id,
+            recipeId,
+          }),
       );
 
       if (response.status == 200) {
@@ -42,7 +42,6 @@ const RecipeLikeButton = ({ recipeId, clickHandle = null }) => {
     startTransition(async () => {
       const stateBefore = isLiked;
       try {
-        console.log(isLiked);
         const response = await fetch(
           `/api/like/${isLiked ? 'remove' : 'add'}`,
           {
@@ -58,7 +57,7 @@ const RecipeLikeButton = ({ recipeId, clickHandle = null }) => {
       }
     });
 
-    if (isLiked && clickHandle ) {
+    if (isLiked && clickHandle) {
       clickHandle(recipeId);
     }
 
