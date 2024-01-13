@@ -12,13 +12,13 @@ export const getRecipes = async (page) => {
   try {
     const recipes = (
       await query(
-        `SELECT * FROM detailed_recipes
+        `SELECT *, COUNT(*) OVER() AS total FROM detailed_recipes
          ORDER BY id DESC
          LIMIT $1 OFFSET $2`,
         [PAGE_SIZE, (page - 1) * PAGE_SIZE],
       )
     ).rows;
-    return [recipes, getTotalPages(recipes.length)];
+    return [recipes, getTotalPages(recipes[0].total)];
   } catch (error) {
     console.error(error);
     throw new Error('failed to fetch paginated recipes');
@@ -41,7 +41,7 @@ export const getFilteredRecipes = async (page, filters) => {
 
     const recipes = (
       await query(
-        `SELECT * FROM detailed_recipes
+        `SELECT *, COUNT(*) OVER() AS total FROM detailed_recipes
          WHERE
           CASE WHEN $1::difficulty[] IS NOT NULL THEN difficulty = ANY ($1) ELSE true END AND
           CASE WHEN $2::category[] IS NOT NULL THEN category = ANY ($2) ELSE true END AND
@@ -70,7 +70,7 @@ export const getFilteredRecipes = async (page, filters) => {
       )
     ).rows;
 
-    return [recipes, getTotalPages(recipes.length)];
+    return [recipes, getTotalPages(recipes[0].total)];
   } catch (error) {
     console.error(error);
     throw new Error('failed to fetch paginated recipes');
@@ -82,7 +82,7 @@ export const getLikedRecipes = async (page, userId) => {
   try {
     const recipes = (
       await query(
-        `SELECT r.* FROM likes l
+        `SELECT r.*, COUNT(*) OVER() AS total FROM likes l
          JOIN detailed_recipes r ON r.id = l.recipe_id
          WHERE l.user_id = $1
          ORDER BY id DESC
@@ -90,7 +90,7 @@ export const getLikedRecipes = async (page, userId) => {
         [userId, PAGE_SIZE, (page - 1) * PAGE_SIZE],
       )
     ).rows;
-    return [recipes, getTotalPages(recipes.length)];
+    return [recipes, getTotalPages(recipes[0].total)];
   } catch (error) {
     console.error(error);
     throw new Error('failed to fetch paginated recipes');
@@ -102,7 +102,7 @@ export const getFollowedRecipes = async (page, userId) => {
   try {
     const recipes = (
       await query(
-        `SELECT r.* FROM follows f
+        `SELECT r.*, COUNT(*) OVER() AS total FROM follows f
          JOIN detailed_recipes r ON r.author_id = f.followee_id
          WHERE f.follower_id = $1
          ORDER BY id DESC
@@ -110,7 +110,7 @@ export const getFollowedRecipes = async (page, userId) => {
         [userId, PAGE_SIZE, (page - 1) * PAGE_SIZE],
       )
     ).rows;
-    return [recipes, getTotalPages(recipes.length)];
+    return [recipes, getTotalPages(recipes[0].total)];
   } catch (error) {
     console.error(error);
     throw new Error('failed to fetch paginated recipes');

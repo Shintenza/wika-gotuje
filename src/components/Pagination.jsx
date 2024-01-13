@@ -26,8 +26,9 @@ const Pagination = ({ totalPages }) => {
       }
       return (
         <button
-          className={`${currentPage == label ? 'bg-w_orange' : 'bg-w_gray'
-            } mx-2 h-10 w-10 rounded-full shadow-md`}
+          className={`${
+            currentPage == label ? 'bg-w_orange text-white' : 'bg-w_gray'
+          } mx-2 h-10 w-10 rounded-full shadow-md`}
           key={key}
           onClick={() => handleClick(page)}
         >
@@ -72,8 +73,8 @@ const Pagination = ({ totalPages }) => {
   };
 
   return (
-    <div className='w-full text-center mt-12'>
-      <div className='inline-block mx-auto'>{returnPaginationItems()}</div>
+    <div className='mt-12 w-full text-center'>
+      <div className='mx-auto inline-block'>{returnPaginationItems()}</div>
     </div>
   );
 };
