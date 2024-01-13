@@ -18,7 +18,9 @@ export const getRecipes = async (page) => {
         [PAGE_SIZE, (page - 1) * PAGE_SIZE],
       )
     ).rows;
-    return [recipes, getTotalPages(recipes[0].total)];
+    const totalPages =
+      recipes.length == 0 ? 1 : getTotalPages(recipes[0].total);
+    return [recipes, totalPages];
   } catch (error) {
     console.error(error);
     throw new Error('failed to fetch paginated recipes');
@@ -70,7 +72,9 @@ export const getFilteredRecipes = async (page, filters) => {
       )
     ).rows;
 
-    return [recipes, getTotalPages(recipes[0].total)];
+    const totalPages =
+      recipes.length == 0 ? 1 : getTotalPages(recipes[0].total);
+    return [recipes, totalPages];
   } catch (error) {
     console.error(error);
     throw new Error('failed to fetch paginated recipes');
@@ -90,7 +94,9 @@ export const getLikedRecipes = async (page, userId) => {
         [userId, PAGE_SIZE, (page - 1) * PAGE_SIZE],
       )
     ).rows;
-    return [recipes, getTotalPages(recipes[0].total)];
+    const totalPages =
+      recipes.length == 0 ? 1 : getTotalPages(recipes[0].total);
+    return [recipes, totalPages];
   } catch (error) {
     console.error(error);
     throw new Error('failed to fetch paginated recipes');
@@ -110,7 +116,9 @@ export const getFollowedRecipes = async (page, userId) => {
         [userId, PAGE_SIZE, (page - 1) * PAGE_SIZE],
       )
     ).rows;
-    return [recipes, getTotalPages(recipes[0].total)];
+    const totalPages =
+      recipes.length == 0 ? 1 : getTotalPages(recipes[0].total);
+    return [recipes, totalPages];
   } catch (error) {
     console.error(error);
     throw new Error('failed to fetch paginated recipes');
