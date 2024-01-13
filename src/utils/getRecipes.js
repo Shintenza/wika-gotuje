@@ -3,7 +3,7 @@ import { query } from './database';
 
 const PAGE_SIZE = 6;
 
-const getTotalPages = async (totalRecipeCount) => {
+const getTotalPages = (totalRecipeCount) => {
   return Math.ceil(totalRecipeCount / PAGE_SIZE);
 };
 
