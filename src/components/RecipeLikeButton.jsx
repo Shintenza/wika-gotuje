@@ -5,7 +5,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa6';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
-const RecipeLikeButton = ({ recipeId, clickHandle = null }) => {
+const RecipeLikeButton = ({ recipeId, refreshOnUnlike }) => {
   const { data: session, status } = useSession();
   const [isLiked, setIsLiked] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -57,8 +57,8 @@ const RecipeLikeButton = ({ recipeId, clickHandle = null }) => {
       }
     });
 
-    if (isLiked && clickHandle) {
-      clickHandle(recipeId);
+    if (isLiked && refreshOnUnlike) {
+      router.refresh();
     }
 
     setIsLiked(!isLiked);

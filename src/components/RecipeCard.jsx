@@ -6,7 +6,7 @@ import { BiCommentDetail } from 'react-icons/bi';
 import getStars from '@utils/getStars';
 import RecipeLikeButton from '@components/RecipeLikeButton';
 
-const RecipeCard = async ({ recipeDetails, clickHandle }) => {
+const RecipeCard = async ({ recipeDetails, refreshOnUnlike }) => {
   const {
     id,
     name,
@@ -29,7 +29,11 @@ const RecipeCard = async ({ recipeDetails, clickHandle }) => {
 
   return (
     <div className='relative flex w-full flex-col rounded-lg bg-w_gray'>
-      <RecipeLikeButton recipeId={id} clickHandle={clickHandle} />
+      <RecipeLikeButton
+        key={id}
+        recipeId={id}
+        refreshOnUnlike={refreshOnUnlike}
+      />
       <Link scroll={false} href={`recipe/${id}`}>
         <div className=' relative min-h-[227px] w-full '>
           <Image

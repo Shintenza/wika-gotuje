@@ -1,75 +1,40 @@
-'use client';
 import '@styles/liked.css';
 import RecipeGrid from '@components/RecipeGrid';
-import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@app/api/auth/[...nextauth]/route';
 import Pagination from '@components/Pagination';
-
 import { redirect } from 'next/navigation';
+import { getFollowedRecipes, getLikedRecipes } from '@utils/getRecipes';
+import SwitchButton from '@components/SwitchButton';
 
-const Page = ({ searchParams }) => {
-  const { data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect('/api/auth/signin?callbackUrl=/liked');
-    },
-  });
-  const [recipes, setRecipes] = useState([]);
-  const [viewMode, setViewMode] = useState('liked');
-  const [totalNumberOfPages, setTotalNumberOfPages] = useState(0);
+const Page = async ({ searchParams }) => {
+  const session = await getServerSession(authOptions);
+  if (!session) redirect('/api/auth/signin?callbackUrl=/liked');
+  const userId = session.user.id;
 
   const currentPage = Number(searchParams.page) || 1;
+  const viewMode = searchParams.mode || 'liked';
 
-  const handleDeleteRecipe = (recipeId) => {
-    setRecipes((current) => current.filter((recipe) => recipe._id != recipeId));
-  };
-
-  useEffect(() => {
-    async function fetchRecipes() {
-      try {
-        const response = await fetch(
-          `/api/${viewMode === 'liked' ? 'like' : 'follows'
-          }?page=${currentPage}`,
-        );
-        if (response.status == 200) {
-          const fetchedRecipes = await response.json();
-          setRecipes(fetchedRecipes.recipes);
-          setTotalNumberOfPages(fetchedRecipes.totalNumber);
-        } else {
-          setRecipes([]);
-        }
-      } catch (error) { }
-    }
-    fetchRecipes();
-  }, [viewMode, currentPage]);
+  let recipes = [];
+  let totalPages = 1;
+  if (viewMode === 'liked') {
+    [recipes, totalPages] = await getLikedRecipes(currentPage, userId);
+  } else if (viewMode === 'followed') {
+    [recipes, totalPages] = await getFollowedRecipes(currentPage, userId);
+  }
 
   return (
     <>
       <div className='page_padding relative mb-5'>
-        <button
-          className={`switch_button ${viewMode == 'liked' ? 'switch_button_active' : ''
-            }`}
-          onClick={() => setViewMode('liked')}
-        >
+        <SwitchButton active={viewMode === 'liked'} option='liked'>
           Polubione
-        </button>
-        <button
-          className={`switch_button ${viewMode == 'subscribed' ? 'switch_button_active' : ''
-            }`}
-          onClick={() => setViewMode('subscribed')}
-        >
+        </SwitchButton>
+        <SwitchButton active={viewMode === 'followed'} option='followed'>
           Obserwowane
-        </button>
+        </SwitchButton>
       </div>
-      {recipes.length > 0 ? (
-        <RecipeGrid recipes={recipes} clickHandle={handleDeleteRecipe} />
-      ) : (
-        <p className='mt-12 text-center text-2xl text-gray-500 '>
-          Trochę tu pusto
-        </p>
-      )}
-
-      <Pagination totalPages={totalNumberOfPages} />
+      <RecipeGrid recipes={recipes} refreshOnUnlike={viewMode === 'liked'} />
+      <Pagination totalPages={totalPages} />
     </>
   );
 };
