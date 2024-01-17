@@ -30,7 +30,7 @@ export const getRecipes = async (page) => {
 export const getFilteredRecipes = async (page, filters) => {
   noStore();
   try {
-    const { name, minPrepTime, maxPrepTime } = filters;
+    const { minPrepTime, maxPrepTime } = filters;
     const difficulty = filters.difficulty
       ? filters.difficulty.split(',')
       : null;
@@ -40,6 +40,9 @@ export const getFilteredRecipes = async (page, filters) => {
       : null;
     const diet = filters.diet ? filters.diet.split(',') : null;
     const region = filters.region ? filters.region.split(',') : null;
+    const name = filters.name
+      ? '%' + filters.name.replace(' ', '%') + '%'
+      : null;
 
     const recipes = (
       await query(
@@ -52,9 +55,7 @@ export const getFilteredRecipes = async (page, filters) => {
           CASE WHEN $5::region[] IS NOT NULL THEN region && ($5) ELSE true END AND
           CASE WHEN $6::INTEGER IS NOT NULL THEN prep_time >= $6 ELSE true END AND
           CASE WHEN $7::INTEGER IS NOT NULL THEN prep_time <= $7 ELSE true END AND
-          CASE WHEN $8::text IS NOT NULL THEN
-            to_tsvector('pl_ispell', name) @@ websearch_to_tsquery($8)
-          ELSE true END
+          CASE WHEN $8::text IS NOT NULL THEN name ILIKE $8 ELSE true END
          ORDER BY id DESC
          LIMIT $9 OFFSET $10`,
         [
