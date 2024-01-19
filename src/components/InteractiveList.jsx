@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import ListInput from './ListInput';
 import ListElement from './ListElement';
 
-const InteractiveList = ({ listTitle, placeholder, mainArray }) => {
-  const [listElements, setListElements] = useState([]);
+const InteractiveList = ({ listTitle, placeholder, mainArray, defaultValues =[] }) => {
+  const [listElements, setListElements] = useState([...defaultValues]);
 
   useEffect(() => {
     mainArray.current = listElements;

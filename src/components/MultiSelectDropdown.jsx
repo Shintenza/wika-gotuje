@@ -11,11 +11,12 @@ const MultiSelectDropdown = ({
   name,
   placeholder = 'Wybierz jedną lub więcej opcji',
   param_name = null,
+  defaultValues = [],
 }) => {
   const param = useSearchParams().get(param_name);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(
-    param ? param.split(',') : [],
+    param ? param.split(',') : defaultValues ? defaultValues : [],
   );
   const dropdownRef = useRef(null);
 
@@ -70,15 +71,13 @@ const MultiSelectDropdown = ({
 
       <ul
         ref={dropdownRef}
-        className={`${
-          !isOpen && 'hidden'
-        } absolute z-10 mt-1 w-full rounded-lg bg-w_gray shadow-md`}
+        className={`${!isOpen && 'hidden'
+          } absolute z-10 mt-1 w-full rounded-lg bg-w_gray shadow-md`}
       >
         {options.map((option, count) => (
           <li
-            className={`${
-              selectedOptions.includes(option) ? 'active' : ''
-            } group rounded-lg p-2 text-gray-600 hover:bg-w_orange hover:text-white`}
+            className={`${selectedOptions.includes(option) ? 'active' : ''
+              } group rounded-lg p-2 text-gray-600 hover:bg-w_orange hover:text-white`}
             key={count}
             onClick={handleSelect}
           >

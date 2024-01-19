@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import { FaBowlFood } from 'react-icons/fa6';
 import { FaFire, FaRegClock, FaShoppingCart } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 
 const RecipeListCard = ({ recipe }) => {
   const router = useRouter();
@@ -26,7 +26,7 @@ const RecipeListCard = ({ recipe }) => {
   };
 
   return (
-    <div className='grid-cols-3 md:grid '>
+    <div className='grid-cols-3 md:grid gap-4'>
       <div className='relative hidden min-h-[20vh] md:col-span-1 md:block'>
         <Image
           src={process.env.NEXT_PUBLIC_CDN_URL + recipe.image}
@@ -66,7 +66,10 @@ const RecipeListCard = ({ recipe }) => {
           </span>
         </div>
         <div className='justify-top flex flex-col items-center gap-2'>
-          <button className='block w-full border-2 border-solid border-black px-8 py-2 hover:bg-black hover:text-white '>
+          <button
+            className='block w-full border-2 border-solid border-black px-8 py-2 hover:bg-black hover:text-white '
+            onClick={() => router.replace(`/edit-recipe?id=${recipe.id}`)}
+          >
             Edit
           </button>
           <button
