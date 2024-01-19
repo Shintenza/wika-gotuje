@@ -9,8 +9,9 @@ import { IoCloseSharp } from 'react-icons/io5';
 import styles from '@styles/Navbar.module.css';
 
 import wikagotuje_logo from '@../public/logo.svg';
-import { redirect, usePathname } from 'next/navigation';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
+import { signIn, useSession } from 'next-auth/react';
+import UserAvatar from './UserAvatar';
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -23,7 +24,7 @@ const Navbar = () => {
       className={`${pathname === '/' ? styles.active : ''}`}
       href='/'
       key={0}
-      onClick={()=> isOpen(false)}
+      onClick={() => isOpen(false)}
     >
       Strona główna
     </Link>,
@@ -31,7 +32,7 @@ const Navbar = () => {
       className={`${pathname === '/find-recipe' ? styles.active : ''}`}
       href='/find-recipe'
       key={1}
-      onClick={()=> isOpen(false)}
+      onClick={() => isOpen(false)}
     >
       Znajdź przepis
     </Link>,
@@ -39,7 +40,7 @@ const Navbar = () => {
       className={`${pathname === '/add-recipe' ? styles.active : ''}`}
       href='/add-recipe'
       key={2}
-      onClick={()=> isOpen(false)}
+      onClick={() => isOpen(false)}
     >
       Dodaj przepis
     </Link>,
@@ -47,9 +48,18 @@ const Navbar = () => {
       className={`${pathname === '/liked' ? styles.active : ''}`}
       href='/liked'
       key={3}
-      onClick={()=> isOpen(false)}
+      onClick={() => isOpen(false)}
     >
       Polubione
+    </Link>,
+
+    <Link
+      className={`${pathname === '/my-recipes' ? styles.active : ''}`}
+      href='/my-recipes'
+      key={4}
+      onClick={() => isOpen(false)}
+    >
+      Moje przepisy
     </Link>,
   ];
   const getAuthBtn = (classesString) => {
@@ -60,19 +70,7 @@ const Navbar = () => {
         </button>
       );
     } else {
-      return (
-        <Image
-          src={session.user.image}
-          alt='user avatar'
-          width={50}
-          height={50}
-          className='rounded-full shadow-md'
-          onClick={() => {
-            signOut();
-            redirect('/');
-          }}
-        />
-      );
+      return <UserAvatar image={session.user.image} />;
     }
   };
 

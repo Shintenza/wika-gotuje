@@ -125,6 +125,28 @@ export const getFollowedRecipes = async (page, userId) => {
   }
 };
 
+export const getMyRecipies = async (page, userId) => {
+  noStore();
+
+  try {
+    const recipes = (
+      await query(
+        `
+      SELECT *, COUNT(*) OVER() AS total FROM recipes 
+      WHERE author_id = $1
+      ORDER BY added DESC
+      LIMIT $2 OFFSET $3 `,
+        [userId, PAGE_SIZE, (page - 1) * PAGE_SIZE],
+      )
+    ).rows;
+    const totalPages = recipes.length == 0 ? 1 : getTotalPages(recipes[0].total);
+    return [recipes, totalPages];
+  } catch (error) {
+    console.error(error);
+    throw new Error('failed to fetch paginated recipes');
+  }
+};
+
 export const getRecipe = async (id) => {
   try {
     const recipe = (

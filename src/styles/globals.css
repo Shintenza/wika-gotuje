@@ -17,3 +17,7 @@ body {
 .page_padding {
   @apply px-[10px] sm:px-[60px] lg:px-[120px];
 }
+
+.section_header {
+ @apply mb-10 border-b-[3px] border-solid border-w_orange pb-10 font-secondary text-4xl
+}
