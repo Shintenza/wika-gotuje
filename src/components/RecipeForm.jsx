@@ -127,8 +127,14 @@ const RecipeForm = ({ existingRecipe }) => {
             name='recipe_name'
             placeholder='np. Pizza hawajska'
             className='basic_input'
-            onChange={(e) => setRecipeName(e.target.value)}
+            onChange={(e) => {
+              const inputText = e.target.value;
+              if (inputText.length <= 150) {
+                setRecipeName(inputText);
+              }
+            }}
           />
+
           {isError && recipeName.length < 3 && (
             <p className='error_msg'>
               Nazwa przepisu musi zawierać co najmniej 3 znaki
