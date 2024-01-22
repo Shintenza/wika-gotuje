@@ -72,7 +72,7 @@ const MultiSelectDropdown = ({
       <ul
         ref={dropdownRef}
         className={`${!isOpen && 'hidden'
-          } absolute z-10 mt-1 w-full rounded-lg bg-w_gray shadow-md`}
+          } absolute z-50 mt-1 w-full rounded-lg bg-w_gray shadow-md`}
       >
         {options.map((option, count) => (
           <li
