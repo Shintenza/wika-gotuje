@@ -11,6 +11,7 @@ import MultiSelectDropdown from '@components/MultiSelectDropdown';
 import { useRouter } from 'next/navigation';
 import { Filters } from '@utils/filters';
 import strToArray from '@utils/strToArray';
+import { revalidateRecipe } from '@utils/revalidateRecipe';
 
 const RecipeForm = ({ existingRecipe }) => {
   const router = useRouter();
@@ -103,6 +104,9 @@ const RecipeForm = ({ existingRecipe }) => {
     );
     if (response.status == 201) {
       const responseBody = await response.json();
+      if (existingRecipe) {
+        revalidateRecipe(existingRecipe.id);
+      }
       router.replace(`/recipe/${responseBody.id}`);
     } else {
       setSubmitting(false);
